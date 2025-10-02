@@ -71,6 +71,13 @@
       "when": 1759390013400,
       "tag": "0009_rich_maggott",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1759437247504,
+      "tag": "0010_oval_wolverine",
+      "breakpoints": true
     }
   ]
 }
