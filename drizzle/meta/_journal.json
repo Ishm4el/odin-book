@@ -8,6 +8,69 @@
       "when": 1732076135211,
       "tag": "0000_short_donald_blake",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1759316168855,
+      "tag": "0001_needy_richard_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759316975703,
+      "tag": "0002_spicy_selene",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759317211762,
+      "tag": "0003_safe_leech",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1759354671042,
+      "tag": "0004_sharp_tombstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1759359712314,
+      "tag": "0005_previous_warbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1759360437418,
+      "tag": "0006_bitter_chronomancer",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1759361706668,
+      "tag": "0007_flashy_ezekiel",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1759389758715,
+      "tag": "0008_acoustic_hitman",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1759390013400,
+      "tag": "0009_rich_maggott",
+      "breakpoints": true
     }
   ]
 }
