@@ -45,25 +45,53 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function Component({ actionData }: Route.ComponentProps) {
   return (
-    <div>
+    <div className="w-full max-w-xs">
       <h1>Login</h1>
 
       {actionData?.error ? (
         <div className="error">{actionData.error}</div>
       ) : null}
 
-      <Form method="post">
-        <div>
-          <label htmlFor="email">Email</label>
-          <input type="email" name="email" id="email" />
+      <Form
+        method="post"
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      >
+        <div className="mb-4">
+          <label
+            htmlFor="email"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          />
         </div>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" id="password" />
+        <div className="mb-6">
+          <label
+            htmlFor="password"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          />
         </div>
 
-        <button type="submit">Sign In</button>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
+        >
+          Sign In
+        </button>
       </Form>
     </div>
   );
