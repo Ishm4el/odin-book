@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import NavigationLink from "./NavigationLink";
+import NavigationLink from "../components/NavigationLink";
 
 export default function NavBar({
   navigationList = [
