@@ -45,8 +45,8 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function Component({ actionData }: Route.ComponentProps) {
   return (
-    <main className="flex justify-center items-center h-[calc(100vh-4rem)]">
-      <div className="max-w-xs shadow-md rounded border overflow-hidden h-min">
+    <main className="flex justify-center h-[calc(100vh-4rem)]">
+      <div className="max-w-xs shadow-md rounded overflow-hidden h-min mt-[10cqh]">
         <h2 className="text-2xl text-center text-amber-300 text-shadow-sm bg-blue-900 p-2">
           Login
         </h2>
@@ -55,10 +55,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
           <div className="error">{actionData.error}</div>
         ) : null}
 
-        <Form
-          method="post"
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        >
+        <Form method="post" className="bg-white rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
             <label
               htmlFor="email"
