@@ -12,7 +12,7 @@ export default function NavBar({
 }) {
   return (
     <>
-      <nav className="w-full flex">
+      <nav className="w-full flex h-16 bg-sky-50">
         <div className="w-1/2 flex justify-center items-center">
           <NavLink to={"/"} className={" text-amber-300 text-shadow-md hover:text-amber-400 transition-colors"}>
             ODIN BOOK
