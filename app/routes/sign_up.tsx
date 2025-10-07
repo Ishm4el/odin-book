@@ -10,8 +10,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Component({ actionData }: Route.ComponentProps) {
   return (
-    <main className="flex justify-center items-center h-[calc(100vh-4rem)]">
-      <div className="max-w-xs shadow-md rounded border overflow-hidden h-min">
+    <main className="flex justify-center h-[calc(100vh-4rem)]">
+      <div className="max-w-xs shadow-md rounded overflow-hidden h-min mt-[10cqh]">
         <h2 className="text-2xl text-center text-amber-300 text-shadow-sm bg-blue-900 p-2">
           Sign Up
         </h2>
