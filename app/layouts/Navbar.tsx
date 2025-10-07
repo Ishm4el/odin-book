@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { NavLink, Outlet } from "react-router";
 import NavigationLink from "../components/NavigationLink";
 
 export default function NavBar({
@@ -12,14 +12,21 @@ export default function NavBar({
 }) {
   return (
     <>
-      <nav>
-        {navigationList.map((navigationElement) => (
-          <NavigationLink
-            key={navigationElement.title}
-            title={navigationElement.title}
-            to={navigationElement.to}
-          />
-        ))}
+      <nav className="w-full flex">
+        <div className="w-1/2 flex justify-center items-center">
+          <NavLink to={"/"} className={" text-amber-300 text-shadow-md hover:text-amber-400 transition-colors"}>
+            ODIN BOOK
+          </NavLink>
+        </div>
+        <div className="w-1/2 flex justify-around items-center">
+          {navigationList.map((navigationElement) => (
+            <NavigationLink
+              key={navigationElement.title}
+              title={navigationElement.title}
+              to={navigationElement.to}
+            />
+          ))}
+        </div>
       </nav>
       <Outlet />
     </>
