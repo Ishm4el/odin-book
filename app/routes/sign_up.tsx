@@ -1,5 +1,6 @@
 import { Form, Link, data, redirect } from "react-router";
 import type { Route } from "./+types/sign_up";
+import FormSmallCard from "~/components/FormSmallCard";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,10 +11,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Component({ actionData }: Route.ComponentProps) {
   return (
-    <div className="max-w-xs shadow-md rounded overflow-hidden h-min mt-[10cqh]">
-      <h2 className="text-2xl text-center text-amber-300 text-shadow-sm bg-blue-900 p-2">
-        Sign Up
-      </h2>
+    <FormSmallCard title="Sign Up">
       <Form method="post" className="bg-white px-8 pt-6 pb-8 mb-4 ">
         <div className="mb-4">
           <label
@@ -64,6 +62,6 @@ export default function Component({ actionData }: Route.ComponentProps) {
           Sign Up
         </button>
       </Form>
-    </div>
+    </FormSmallCard>
   );
 }
