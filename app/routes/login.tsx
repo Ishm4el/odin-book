@@ -62,7 +62,8 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="email"
             name="email"
             id="email"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline focus:border-sky-500 invalid:border-pink-500 invalid:text-pink-600 "
+            required
           />
         </div>
 
@@ -74,6 +75,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             Password
           </label>
           <input
+            required
             type="password"
             name="password"
             id="password"
