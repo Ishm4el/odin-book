@@ -24,6 +24,11 @@ export async function action({ request }: Route.ActionArgs) {
   const submittedEmail = String(formData.get("email"));
   const submittedPassword = String(formData.get("password"));
   const submittedRetypedPassword = String(formData.get("retypedPassword"));
+  const submittedFirstName = String(formData.get("firstName"));
+  const submittedLastName = String(formData.get("lastName"));
+  const submittedBirthdate = String(formData.get("birthdate"));
+
+  if (!validator.isDate(submittedBirthdate)) throw new Error("Invalid Date");
 
   if (!validator.isEmail(submittedEmail))
     throw new Error("Invalid submitted email");
@@ -120,6 +125,51 @@ export default function Component({ actionData }: Route.ComponentProps) {
   return (
     <FormSmallCard title="Sign Up">
       <Form method="post" className="bg-white px-8 pt-6 pb-8 mb-4 ">
+        <div className="mb-4">
+          <label
+            htmlFor="firstName"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            First Name
+          </label>
+          <input
+            required
+            type="text"
+            name="firstName"
+            id="firstName"
+            className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="lastName"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Last Name
+          </label>
+          <input
+            required
+            type="text"
+            name="lastName"
+            id="lastName"
+            className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="birthdate"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Birthdate
+          </label>
+          <input
+            required
+            type="date"
+            name="birthdate"
+            id="birthdate"
+            className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
         <div className="mb-4">
           <label
             htmlFor="email"
