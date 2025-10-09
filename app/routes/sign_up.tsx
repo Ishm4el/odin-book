@@ -1,6 +1,7 @@
 import { Form, Link, data, redirect } from "react-router";
 import type { Route } from "./+types/sign_up";
 import FormSmallCard from "~/components/FormSmallCard";
+import { useReducer } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,6 +9,11 @@ export function meta({}: Route.MetaArgs) {
     { name: "description", content: "Signing Up!" },
   ];
 }
+
+const colorValidateText = (bool: boolean) => {
+  if (bool) return "text-green-500";
+  else return "text-pink-600";
+};
 
 const passwordRequirementsReducerInitialState = {
   validLength: false,
@@ -59,6 +65,10 @@ function passwordRequirementsReducer(
 }
 
 export default function Component({ actionData }: Route.ComponentProps) {
+  const [validPasswordState, validPasswordDispatch] = useReducer(
+    passwordRequirementsReducer,
+    passwordRequirementsReducerInitialState
+  );
   return (
     <FormSmallCard title="Sign Up">
       <Form method="post" className="bg-white px-8 pt-6 pb-8 mb-4 ">
@@ -90,16 +100,53 @@ export default function Component({ actionData }: Route.ComponentProps) {
             name="password"
             id="password"
             className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            onChange={(e) => {
+              const currentPasswordInput = e.currentTarget.value;
+              validPasswordDispatch({
+                type: "validateLength",
+                payload: currentPasswordInput,
+              });
+              validPasswordDispatch({
+                type: "validateLowercase",
+                payload: currentPasswordInput,
+              });
+              validPasswordDispatch({
+                type: "validateUppercase",
+                payload: currentPasswordInput,
+              });
+              validPasswordDispatch({
+                type: "validateNumber",
+                payload: currentPasswordInput,
+              });
+              validPasswordDispatch({
+                type: "validateSpecial",
+                payload: currentPasswordInput,
+              });
+            }}
           />
         </div>
         <section className="mb-4">
           <h3>Password requirements</h3>
           <ul id="password-requirements">
-            <li>6 characters minimum</li>
-            <li>1 lowercase</li>
-            <li>1 uppercase</li>
-            <li>1 number</li>
-            <li>1 special character</li>
+            <li className={colorValidateText(validPasswordState.validLength)}>
+              6 characters minimum
+            </li>
+            <li
+              className={colorValidateText(validPasswordState.validLowercase)}
+            >
+              1 lowercase
+            </li>
+            <li
+              className={colorValidateText(validPasswordState.validUppercase)}
+            >
+              1 uppercase
+            </li>
+            <li className={colorValidateText(validPasswordState.validNumber)}>
+              1 number
+            </li>
+            <li className={colorValidateText(validPasswordState.validSpecial)}>
+              1 special character
+            </li>
           </ul>
         </section>
         <div className="mb-6">
