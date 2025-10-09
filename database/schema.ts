@@ -12,16 +12,18 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable(
-  "user",
+  "users",
   {
-    id: uuid().primaryKey().defaultRandom(),
-    firstName: varchar({ length: 50 }).notNull(),
-    lastName: varchar({ length: 50 }).notNull(),
-    email: varchar({ length: 255 }).notNull().unique(),
-    password: varchar({ length: 255 }).notNull(),
-    created: timestamp().defaultNow().notNull(),
-    profilePictureAddress: text().notNull(),
-    birthDate: date().notNull(),
+    id: uuid("id").primaryKey().defaultRandom(),
+    firstName: varchar("firstName", { length: 50 }).notNull(),
+    lastName: varchar("lastName", { length: 50 }).notNull(),
+    email: varchar("email", { length: 255 }).notNull().unique(),
+    password: varchar("password", { length: 255 }).notNull(),
+    created: timestamp("created").defaultNow().notNull(),
+    profilePictureAddress: text("profilePictureAddress")
+      .notNull()
+      .default("/profileImages/theDefault.jpg"),
+    birthdate: date("birthdate").notNull(),
 
     // friends - many users   X
     // posts - many posts
@@ -47,7 +49,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   usersLikedComments: many(usersLikedComments),
 }));
 
-export const posts = pgTable("post", {
+export const posts = pgTable("posts", {
   id: uuid().primaryKey().defaultRandom(),
   title: varchar({ length: 100 }).notNull(),
   text: varchar({ length: 255 }).notNull(),
@@ -76,7 +78,7 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
   usersToLikedPosts: many(usersLikedPosts, { relationName: "usersLikedPosts" }),
 }));
 
-export const comments = pgTable("comment", {
+export const comments = pgTable("comments", {
   id: uuid().defaultRandom().notNull(),
   text: varchar({ length: 255 }),
   datePublished: timestamp().defaultNow().notNull(),

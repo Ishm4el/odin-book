@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "profile_picture_address" SET DEFAULT '/profileImages/theDefault.jpg';

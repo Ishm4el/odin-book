@@ -5,6 +5,8 @@ import { useReducer } from "react";
 import bcrypt from "bcryptjs";
 import validator from "validator";
 import invariant from "tiny-invariant";
+import { database } from "~/database/context";
+import * as schema from "~/database/schema";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,15 +21,21 @@ const PASSWORD_SINGLE_UPPERCASE = /^(?=.*[A-Z]).*$/;
 const PASSWORD_SINGLE_NUMBER = /\d/;
 const PASSWORD_SINGLE_SPECIAL = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
 
-export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const submittedEmail = String(formData.get("email"));
-  const submittedPassword = String(formData.get("password"));
-  const submittedRetypedPassword = String(formData.get("retypedPassword"));
-  const submittedFirstName = String(formData.get("firstName"));
-  const submittedLastName = String(formData.get("lastName"));
-  const submittedBirthdate = String(formData.get("birthdate"));
-
+const validateSubmittedForm = async ({
+  submittedFirstName,
+  submittedBirthdate,
+  submittedEmail,
+  submittedLastName,
+  submittedPassword,
+  submittedRetypedPassword,
+}: {
+  submittedFirstName: string;
+  submittedLastName: string;
+  submittedBirthdate: string;
+  submittedEmail: string;
+  submittedPassword: string;
+  submittedRetypedPassword: string;
+}) => {
   if (!validator.isDate(submittedBirthdate)) throw new Error("Invalid Date");
 
   if (!validator.isEmail(submittedEmail))
@@ -60,6 +68,49 @@ export async function action({ request }: Route.ActionArgs) {
     );
 
   const hashedPassword = await bcrypt.hash(submittedPassword, 10);
+
+  return {
+    firstName: submittedFirstName,
+    lastName: submittedLastName,
+    birthdate: submittedBirthdate,
+    hashedPassword,
+    email: submittedEmail,
+  };
+};
+
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const submittedEmail = String(formData.get("email"));
+  const submittedPassword = String(formData.get("password"));
+  const submittedRetypedPassword = String(formData.get("retypedPassword"));
+  const submittedFirstName = String(formData.get("firstName"));
+  const submittedLastName = String(formData.get("lastName"));
+  const submittedBirthdate = String(formData.get("birthdate"));
+
+  const validatedInputs = await validateSubmittedForm({
+    submittedBirthdate,
+    submittedEmail,
+    submittedFirstName,
+    submittedLastName,
+    submittedPassword,
+    submittedRetypedPassword,
+  });
+
+  const db = database();
+  try {
+    return await db
+      .insert(schema.users)
+      .values({
+        birthdate: validatedInputs.birthdate,
+        email: validatedInputs.email,
+        firstName: validatedInputs.firstName,
+        lastName: validatedInputs.lastName,
+        password: validatedInputs.hashedPassword,
+      })
+      .returning();
+  } catch (error) {
+    throw new Error(JSON.stringify(error));
+  }
 }
 
 const colorValidateText = (bool: boolean) => {
@@ -117,6 +168,36 @@ function passwordRequirementsReducer(
   }
 }
 
+function BasicInputField({
+  name,
+  text,
+  type = "text",
+  additionalClassName = "",
+}: {
+  name: string;
+  text: string;
+  type?: string;
+  additionalClassName?: string;
+}) {
+  return (
+    <div className="mb-4">
+      <label
+        htmlFor={name}
+        className="block text-gray-700 text-sm font-bold mb-2"
+      >
+        {text}
+      </label>
+      <input
+        required
+        type={type}
+        name={name}
+        id={name}
+        className={`shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline invalid:text-red-600 invalid:border-red-500/50 ${additionalClassName}`}
+      />
+    </div>
+  );
+}
+
 export default function Component({ actionData }: Route.ComponentProps) {
   const [validPasswordState, validPasswordDispatch] = useReducer(
     passwordRequirementsReducer,
@@ -124,37 +205,12 @@ export default function Component({ actionData }: Route.ComponentProps) {
   );
   return (
     <FormSmallCard title="Sign Up">
+      {actionData ? (
+        <p className="overflow-auto">{JSON.stringify(actionData)}</p>
+      ) : null}
       <Form method="post" className="bg-white px-8 pt-6 pb-8 mb-4 ">
-        <div className="mb-4">
-          <label
-            htmlFor="firstName"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            First Name
-          </label>
-          <input
-            required
-            type="text"
-            name="firstName"
-            id="firstName"
-            className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="lastName"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Last Name
-          </label>
-          <input
-            required
-            type="text"
-            name="lastName"
-            id="lastName"
-            className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
+        <BasicInputField name="firstName" text="First Name" />
+        <BasicInputField name="lastName" text="Last Name" />
         <div className="mb-4">
           <label
             htmlFor="birthdate"
@@ -170,21 +226,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Email
-          </label>
-          <input
-            required
-            type="email"
-            name="email"
-            id="email"
-            className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
+        <BasicInputField name="email" text="Email" type="email" />
         <div>
           <label
             htmlFor="password"
@@ -247,21 +289,12 @@ export default function Component({ actionData }: Route.ComponentProps) {
             </li>
           </ul>
         </section>
-        <div className="mb-6">
-          <label
-            htmlFor="retypedPassword"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Retype Password
-          </label>
-          <input
-            required
-            type="password"
-            name="retypedPassword"
-            id="retypedPassword"
-            className="shadow appearance-none border border-red-500/50 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
+        <BasicInputField
+          name="retypedPassword"
+          text="Retype Password"
+          type="password"
+          additionalClassName="mb-6"
+        />
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
