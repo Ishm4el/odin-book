@@ -15,6 +15,8 @@ declare module "react-router" {
 
 export const app = express();
 
+app.use("/profileImages", express.static("profileImages"));
+
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
 
 const client = postgres(process.env.DATABASE_URL);
@@ -29,5 +31,5 @@ app.use(
         VALUE_FROM_EXPRESS: "Hello from Express",
       };
     },
-  }),
+  })
 );
