@@ -84,7 +84,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="email"
             name="email"
             id="email"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
         <div>
@@ -99,7 +99,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="password"
             name="password"
             id="password"
-            className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border border-red-500/50 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
             onChange={(e) => {
               const currentPasswordInput = e.currentTarget.value;
               validPasswordDispatch({
@@ -161,7 +161,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="password"
             name="retypedPassword"
             id="retypedPassword"
-            className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border border-red-500/50 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
         <button
