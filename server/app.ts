@@ -1,8 +1,10 @@
 import { createRequestHandler } from "@react-router/express";
 import { drizzle } from "drizzle-orm/postgres-js";
 import express from "express";
+import path from "path";
 import postgres from "postgres";
 import "react-router";
+import { fileURLToPath } from "url";
 
 import { DatabaseContext } from "~/database/context";
 import * as schema from "~/database/schema";
@@ -15,7 +17,12 @@ declare module "react-router" {
 
 export const app = express();
 
-app.use("/profileImages", express.static("profileImages"));
+app.use(
+  "/profileImages",
+  express.static(
+    path.join(path.dirname(fileURLToPath(import.meta.url)), "profileImages")
+  )
+);
 
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
 

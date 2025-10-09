@@ -8,7 +8,10 @@ export async function loader({ request }: Route.LoaderArgs) {
     request.headers.get("cookie")
   );
   const user = session.get("user");
-  return { user };
+
+  const image = fetch("http://localhost:3000/profileImages/theDefault.jpg");
+
+  return { user, image };
 }
 
 export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
