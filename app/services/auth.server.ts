@@ -6,11 +6,12 @@ import { eq } from "drizzle-orm";
 import { users } from "~/database/schema";
 import bcrypt from "bcryptjs";
 
-type User = {
+export type User = {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
+  profilePictureAddress: string;
 };
 
 export const sessionStorage = createCookieSessionStorage({
@@ -35,11 +36,13 @@ async function login(email: string, password: string): Promise<User> {
       firstName: true,
       lastName: true,
       password: true,
+      profilePictureAddress: true,
     },
     where: eq(users.email, email),
   });
 
   if (user) {
+    console.log(user);
     const match = await bcrypt.compare(password, user.password);
     if (!match) throw new Error("Invalid Password");
     else
@@ -48,6 +51,7 @@ async function login(email: string, password: string): Promise<User> {
         firstName: user.firstName,
         id: user.id,
         lastName: user.lastName,
+        profilePictureAddress: user.profilePictureAddress,
       };
   } else throw new Error("User is empty");
 }

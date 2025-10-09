@@ -1,17 +1,24 @@
 import { Outlet } from "react-router";
 import NavBar from "~/components/NavBar";
 import type { Route } from "./+types/DefaultLayout";
-import { sessionStorage } from "~/services/auth.server";
+import { sessionStorage, type User } from "~/services/auth.server";
+import invariant from "tiny-invariant";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await sessionStorage.getSession(
     request.headers.get("cookie")
   );
-  const user = session.get("user");
+  const user = session.get<"user">("user");
 
-  const image = fetch("http://localhost:3000/profileImages/theDefault.jpg");
+  const determineIfIsUser = (
+    toBeDetermined: unknown
+  ): toBeDetermined is User => {
+    if (typeof toBeDetermined !== "object") return false;
+    if ((toBeDetermined as User).id) return true;
+    else return false;
+  };
 
-  return { user, image };
+  return determineIfIsUser(user) ? { user } : {};
 }
 
 export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
@@ -23,6 +30,10 @@ export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
             { title: "Home", to: "/" },
             { title: "Logout", to: "/logout" },
           ]}
+          user={{
+            name: loaderData.user.firstName + " " + loaderData.user.lastName,
+            profilePictureURL: loaderData.user.profilePictureAddress,
+          }}
         />
       ) : (
         <NavBar />
