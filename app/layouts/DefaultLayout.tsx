@@ -1,10 +1,29 @@
 import { Outlet } from "react-router";
 import NavBar from "~/components/NavBar";
+import type { Route } from "./+types/DefaultLayout";
+import { sessionStorage } from "~/services/auth.server";
 
-export default function DefaultLayout() {
+export async function loader({ request }: Route.LoaderArgs) {
+  const session = await sessionStorage.getSession(
+    request.headers.get("cookie")
+  );
+  const user = session.get("user");
+  return { user };
+}
+
+export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
   return (
     <>
-      <NavBar />
+      {loaderData.user ? (
+        <NavBar
+          navigationList={[
+            { title: "Home", to: "/" },
+            { title: "Logout", to: "/logout" },
+          ]}
+        />
+      ) : (
+        <NavBar />
+      )}
       <main className="flex justify-center h-[calc(100vh-2.5rem)]">
         <Outlet />
       </main>
