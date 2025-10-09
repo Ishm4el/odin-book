@@ -2,12 +2,59 @@ import { Form, Link, data, redirect } from "react-router";
 import type { Route } from "./+types/sign_up";
 import FormSmallCard from "~/components/FormSmallCard";
 import { useReducer } from "react";
+import bcrypt from "bcryptjs";
+import validator from "validator";
+import invariant from "tiny-invariant";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Signing Up" },
     { name: "description", content: "Signing Up!" },
   ];
+}
+
+const PASSWORD_MINIMUM_LENGTH = /^.{6,}$/;
+const PASSWORD_SINGLE_LOWERCASE = /^(?=.*[a-z]).*$/;
+const PASSWORD_SINGLE_UPPERCASE = /^(?=.*[A-Z]).*$/;
+const PASSWORD_SINGLE_NUMBER = /\d/;
+const PASSWORD_SINGLE_SPECIAL = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const submittedEmail = String(formData.get("email"));
+  const submittedPassword = String(formData.get("password"));
+  const submittedRetypedPassword = String(formData.get("retypedPassword"));
+
+  if (!validator.isEmail(submittedEmail))
+    throw new Error("Invalid submitted email");
+
+  invariant(
+    PASSWORD_MINIMUM_LENGTH.test(submittedPassword),
+    "Password must be at least 6 characters long"
+  );
+  invariant(
+    PASSWORD_SINGLE_LOWERCASE.test(submittedPassword),
+    "Password must have a lowercase character"
+  );
+  invariant(
+    PASSWORD_SINGLE_UPPERCASE.test(submittedPassword),
+    "Password must have an uppercase character"
+  );
+  invariant(
+    PASSWORD_SINGLE_NUMBER.test(submittedPassword),
+    "Password must contain a single number"
+  );
+  invariant(
+    PASSWORD_SINGLE_SPECIAL.test(submittedPassword),
+    "Password must contain a special character"
+  );
+
+  if (submittedPassword !== submittedRetypedPassword)
+    throw new Error(
+      "Submitted password and submitted retyped-password do not match"
+    );
+
+  const hashedPassword = await bcrypt.hash(submittedPassword, 10);
 }
 
 const colorValidateText = (bool: boolean) => {
@@ -36,28 +83,29 @@ function passwordRequirementsReducer(
 ) {
   switch (action.type) {
     case "validateLength":
-      return { ...state, validLength: /^.{6,}$/.test(action.payload) };
+      return {
+        ...state,
+        validLength: PASSWORD_MINIMUM_LENGTH.test(action.payload),
+      };
     case "validateLowercase":
       return {
         ...state,
-        validLowercase: /^(?=.*[a-z]).*$/.test(action.payload),
+        validLowercase: PASSWORD_SINGLE_LOWERCASE.test(action.payload),
       };
     case "validateUppercase":
       return {
         ...state,
-        validUppercase: /^(?=.*[A-Z]).*$/.test(action.payload),
+        validUppercase: PASSWORD_SINGLE_UPPERCASE.test(action.payload),
       };
     case "validateNumber":
       return {
         ...state,
-        validNumber: /\d/.test(action.payload),
+        validNumber: PASSWORD_SINGLE_NUMBER.test(action.payload),
       };
     case "validateSpecial":
       return {
         ...state,
-        validSpecial: /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(
-          action.payload
-        ),
+        validSpecial: PASSWORD_SINGLE_SPECIAL.test(action.payload),
       };
     default:
       throw new Error("passwordRequirementsReducer: invalid action.type used");
