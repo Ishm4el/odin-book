@@ -198,6 +198,41 @@ function BasicInputField({
   );
 }
 
+function PasswordRequirements({
+  validPasswordState,
+}: {
+  validPasswordState: {
+    validLength: boolean;
+    validLowercase: boolean;
+    validUppercase: boolean;
+    validNumber: boolean;
+    validSpecial: boolean;
+  };
+}) {
+  return (
+    <section className="mb-4">
+      <h3>Password requirements</h3>
+      <ul id="password-requirements">
+        <li className={colorValidateText(validPasswordState.validLength)}>
+          6 characters minimum
+        </li>
+        <li className={colorValidateText(validPasswordState.validLowercase)}>
+          1 lowercase
+        </li>
+        <li className={colorValidateText(validPasswordState.validUppercase)}>
+          1 uppercase
+        </li>
+        <li className={colorValidateText(validPasswordState.validNumber)}>
+          1 number
+        </li>
+        <li className={colorValidateText(validPasswordState.validSpecial)}>
+          1 special character
+        </li>
+      </ul>
+    </section>
+  );
+}
+
 export default function Component({ actionData }: Route.ComponentProps) {
   const [validPasswordState, validPasswordDispatch] = useReducer(
     passwordRequirementsReducer,
@@ -211,22 +246,9 @@ export default function Component({ actionData }: Route.ComponentProps) {
       <Form method="post" className="bg-white px-8 pt-6 pb-8 mb-4 ">
         <BasicInputField name="firstName" text="First Name" />
         <BasicInputField name="lastName" text="Last Name" />
-        <div className="mb-4">
-          <label
-            htmlFor="birthdate"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Birthdate
-          </label>
-          <input
-            required
-            type="date"
-            name="birthdate"
-            id="birthdate"
-            className="shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
+        <BasicInputField name="birthdate" text="Birthdate" type="date" />
         <BasicInputField name="email" text="Email" type="email" />
+        <PasswordRequirements validPasswordState={validPasswordState} />
         <div>
           <label
             htmlFor="password"
@@ -265,30 +287,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             }}
           />
         </div>
-        <section className="mb-4">
-          <h3>Password requirements</h3>
-          <ul id="password-requirements">
-            <li className={colorValidateText(validPasswordState.validLength)}>
-              6 characters minimum
-            </li>
-            <li
-              className={colorValidateText(validPasswordState.validLowercase)}
-            >
-              1 lowercase
-            </li>
-            <li
-              className={colorValidateText(validPasswordState.validUppercase)}
-            >
-              1 uppercase
-            </li>
-            <li className={colorValidateText(validPasswordState.validNumber)}>
-              1 number
-            </li>
-            <li className={colorValidateText(validPasswordState.validSpecial)}>
-              1 special character
-            </li>
-          </ul>
-        </section>
+
         <BasicInputField
           name="retypedPassword"
           text="Retype Password"
