@@ -31,14 +31,14 @@ export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
             { title: "Logout", to: "/logout" },
           ]}
           user={{
-            name: loaderData.user.firstName + " " + loaderData.user.lastName,
+            name: loaderData.user.firstName,
             profilePictureURL: loaderData.user.profilePictureAddress,
           }}
         />
       ) : (
         <NavBar />
       )}
-      <main className="flex justify-center h-[calc(100vh-2.5rem)]">
+      <main className="flex justify-center h-[calc(100vh-2.5rem)] md:flex-col w-full items-center bg-[url(/booksBackgroundImage.jpg)] bg-cover bg-center bg-no-repeat md:h-screen">
         <Outlet />
       </main>
     </>
