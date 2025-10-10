@@ -11,6 +11,8 @@ export default [
     route("/login", "routes/login.tsx"),
     route("/sign_up", "routes/sign_up.tsx"),
     route("/logout", "routes/logout.tsx"),
-    layout()
+    layout("./layouts/ProtectedLayout.tsx", [
+      route("/post", "routes/post.tsx"),
+    ]),
   ]),
 ] satisfies RouteConfig;
