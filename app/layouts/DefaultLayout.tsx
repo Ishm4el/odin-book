@@ -28,6 +28,7 @@ export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
         <NavBar
           navigationList={[
             { title: "Home", to: "/" },
+            { title: "Post", to: "/post" },
             { title: "Logout", to: "/logout" },
           ]}
           user={{
