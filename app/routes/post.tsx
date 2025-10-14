@@ -68,7 +68,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
       <div className="flex items-center justify-center flex-col mb-6">
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
+          className="bg-blue-500 focus:bg-blue-700 transition-colors hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
         >
           Post
         </button>
