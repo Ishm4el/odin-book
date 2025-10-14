@@ -80,7 +80,7 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
 
 export const comments = pgTable("comments", {
   id: uuid().defaultRandom().notNull(),
-  text: varchar({ length: 255 }),
+  text: varchar({ length: 255 }).notNull(),
   datePublished: timestamp().defaultNow().notNull(),
   dateUpdated: timestamp().defaultNow().notNull(),
 

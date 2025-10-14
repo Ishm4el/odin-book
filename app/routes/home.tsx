@@ -4,6 +4,10 @@ import * as schema from "~/database/schema";
 import type { Route } from "./+types/home";
 
 import { sessionStorage } from "~/services/auth.server";
+import { Form } from "react-router";
+import { authenticate } from "~/services/authenticate";
+import { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -37,7 +41,39 @@ export async function loader({ context, request }: Route.LoaderArgs) {
   };
 }
 
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+
+  const postId = String(formData.get("postId"));
+  const comment = String(formData.get("comment"));
+
+  const user = await authenticate(request);
+
+  const db = database();
+
+  try {
+    return db
+      .insert(schema.comments)
+      .values({
+        authorId: user.id,
+        postId,
+        text: comment,
+      })
+      .returning();
+  } catch (error) {
+    throw new Error(JSON.stringify(error));
+  }
+}
+
 export default function Home({ actionData, loaderData }: Route.ComponentProps) {
+  useEffect(() => {
+    if (actionData) {
+      toast.success("Your comment has been posted!", {
+        toastId: actionData[0].id,
+      });
+    }
+  }, [actionData]);
+
   return (
     <>
       {loaderData.user ? (
@@ -65,6 +101,35 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
                   </div>
 
                   <span className="lg p-5 block">{post.text}</span>
+
+                  <Form
+                    method="post"
+                    className="w-full flex p-2"
+                    onSubmit={(e) => {
+                      e.currentTarget.rest();
+                    }}
+                  >
+                    <input
+                      type="text"
+                      hidden
+                      value={post.id}
+                      name="postId"
+                      id="postId"
+                      readOnly
+                    />
+                    <input
+                      type="text"
+                      className="flex-1 ring p-1"
+                      name="comment"
+                      id="comment"
+                    />
+                    <button
+                      className="bg-blue-500 focus:bg-blue-700 transition-colors hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
+                      type="submit"
+                    >
+                      Post Comment
+                    </button>
+                  </Form>
                 </article>
               ))
             : null}
@@ -79,6 +144,7 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
           </h2>
         </>
       )}
+      <ToastContainer />
     </>
   );
 }
