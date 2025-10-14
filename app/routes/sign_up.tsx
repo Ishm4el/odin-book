@@ -1,12 +1,13 @@
-import { Form, Link, data, redirect } from "react-router";
+import { Form, Link, data, redirect, useNavigate } from "react-router";
 import type { Route } from "./+types/sign_up";
 import FormSmallCard from "~/components/FormSmallCard";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import bcrypt from "bcryptjs";
 import validator from "validator";
 import invariant from "tiny-invariant";
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
+import { ToastContainer, toast } from "react-toastify";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -238,11 +239,25 @@ export default function Component({ actionData }: Route.ComponentProps) {
     passwordRequirementsReducer,
     passwordRequirementsReducerInitialState
   );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (actionData) {
+      toast.success(
+        "Welcome " + actionData[0].lastName + "!\nRedirecting to Login Page",
+        {
+          toastId: "OutSuccess",
+          ariaLabel: "Successfully Signed Up!",
+          onClose: () => {
+            navigate("/login");
+          },
+        }
+      );
+    }
+  }, [actionData]);
+
   return (
     <FormSmallCard title="Sign Up">
-      {actionData ? (
-        <p className="overflow-auto">{JSON.stringify(actionData)}</p>
-      ) : null}
       <Form method="post" className="bg-white px-8 pt-6 pb-8 mb-4 ">
         <BasicInputField name="firstName" text="First Name" />
         <BasicInputField name="lastName" text="Last Name" />
@@ -301,6 +316,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
           Sign Up
         </button>
       </Form>
+      <ToastContainer />
     </FormSmallCard>
   );
 }

@@ -2,7 +2,6 @@ import { Outlet } from "react-router";
 import NavBar from "~/components/NavBar";
 import type { Route } from "./+types/DefaultLayout";
 import { sessionStorage, type User } from "~/services/auth.server";
-import invariant from "tiny-invariant";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await sessionStorage.getSession(
