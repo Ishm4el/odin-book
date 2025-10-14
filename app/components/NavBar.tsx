@@ -2,7 +2,7 @@ import { NavLink } from "react-router";
 import NavigationLink from "./NavigationLink";
 import { useEffect, useState } from "react";
 
-export default async function NavBar({
+export default function NavBar({
   navigationList = [
     { title: "Home", to: "/" },
     { title: "Login", to: "/login" },
