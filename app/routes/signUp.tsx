@@ -1,5 +1,5 @@
 import { Form, Link, data, redirect, useNavigate } from "react-router";
-import type { Route } from "./+types/sign_up";
+import type { Route } from "./+types/signUp";
 import FormSmallCard from "~/components/FormSmallCard";
 import { useEffect, useReducer } from "react";
 import bcrypt from "bcryptjs";

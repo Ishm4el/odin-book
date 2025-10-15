@@ -1,5 +1,5 @@
 import { authenticate } from "~/services/authenticate";
-import type { Route } from "./+types/postLikeComment";
+import type { Route } from "./+types/likePost";
 
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
