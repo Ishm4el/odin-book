@@ -15,7 +15,9 @@ export async function action({ request, params }: Route.ActionArgs) {
   console.log(formData);
   const shouldLike = String(formData.get("shouldLike"));
   if (!isBoolean(shouldLike)) throw new Error("shouldLike should be a boolean");
-  const shouldLikeBool = Boolean(shouldLike);
+  const shouldLikeBool = JSON.parse(shouldLike);
+
+  console.log(shouldLikeBool);
 
   const db = database();
   try {
@@ -31,6 +33,9 @@ export async function action({ request, params }: Route.ActionArgs) {
         set: { like: shouldLikeBool },
       })
       .returning();
+
+    console.log(liked[0]);
+
     return { ...liked[0] };
   } catch (error) {
     throw new Error(JSON.stringify(error));

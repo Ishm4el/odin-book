@@ -13,7 +13,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
         and(eq(t.postId, params.postId), eq(t.userId, user.id)),
     });
 
-    console.log(isPostLiked);
+    // console.log(isPostLiked);
 
     return isPostLiked;
   } catch (error) {

@@ -150,7 +150,7 @@ function LikePost({ postId }: { postId: string }) {
         onMouseLeave={handleMouseLeave}
         className="hover:cursor-pointer w-full"
         name="shouldLike"
-        value={"true"}
+        value={fetcherLoader.data?.like ? "false" : "true"}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +158,11 @@ function LikePost({ postId }: { postId: string }) {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className={fetcherLoader.data ? "fill-amber-500 hover:fill-amber-100" : "hover:fill-amber-400"}
+          className={
+            fetcherLoader.data?.like
+              ? "fill-amber-500 hover:fill-amber-100"
+              : "hover:fill-amber-400"
+          }
         >
           <path
             strokeLinecap="round"
