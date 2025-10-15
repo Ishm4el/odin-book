@@ -14,6 +14,7 @@ export default [
     layout("./layouts/ProtectedLayout.tsx", [
       route("/post", "routes/post.tsx"),
       route("/post/like/:postId", "routes/postLikeComment.tsx"),
+      route("/post/isLiked/:postId", "routes/isPostLiked.tsx"),
     ]),
   ]),
 ] satisfies RouteConfig;

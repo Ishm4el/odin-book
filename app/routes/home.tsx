@@ -8,6 +8,7 @@ import { Form, useFetcher } from "react-router";
 import { authenticate } from "~/services/authenticate";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import type { loader as loaderIsPostLiked } from "./isPostLiked";
 
 interface post {
   post: {
@@ -44,7 +45,6 @@ export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
-    {},
   ];
 }
 
@@ -125,6 +125,12 @@ function LikePost({ postId }: { postId: string }) {
     userId: string;
   }>();
 
+  const fetcherLoader = useFetcher<typeof loaderIsPostLiked>();
+
+  useEffect(() => {
+    fetcherLoader.load("post/isLiked/" + postId);
+  }, []);
+
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -139,6 +145,9 @@ function LikePost({ postId }: { postId: string }) {
       className="flex-1 flex items-center justify-center "
     >
       {fetcher.data && <p>{JSON.stringify(fetcher.data)}</p>}
+      {fetcherLoader.data && (
+        <p className="bg-amber-50">{JSON.stringify(fetcherLoader.data)}</p>
+      )}
       <button
         type="submit"
         onMouseEnter={handleMouseEnter}
