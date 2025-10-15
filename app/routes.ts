@@ -13,6 +13,7 @@ export default [
     route("/logout", "routes/logout.tsx"),
     layout("./layouts/ProtectedLayout.tsx", [
       route("/post", "routes/post.tsx"),
+      route("/post/like/:postId", "routes/postLikeComment.tsx"),
     ]),
   ]),
 ] satisfies RouteConfig;

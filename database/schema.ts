@@ -150,7 +150,7 @@ export const usersLikedPosts = pgTable(
       .notNull()
       .references(() => posts.id),
   },
-  (table) => [primaryKey({ columns: [table.userId, table.postId] })]
+  (table) => [primaryKey({ columns: [table.userId, table.postId], name: "id" })]
 );
 export const usersLikedPostsRelations = relations(
   usersLikedPosts,
