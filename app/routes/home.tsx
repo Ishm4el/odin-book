@@ -144,10 +144,6 @@ function LikePost({ postId }: { postId: string }) {
       action={`/post/like/${postId}`}
       className="flex-1 flex items-center justify-center "
     >
-      {fetcher.data && <p>{JSON.stringify(fetcher.data)}</p>}
-      {fetcherLoader.data && (
-        <p className="bg-amber-50">{JSON.stringify(fetcherLoader.data)}</p>
-      )}
       <button
         type="submit"
         onMouseEnter={handleMouseEnter}
@@ -162,7 +158,7 @@ function LikePost({ postId }: { postId: string }) {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="hover:fill-amber-50"
+          className={fetcherLoader.data ? "fill-amber-500 hover:fill-amber-100" : "hover:fill-amber-400"}
         >
           <path
             strokeLinecap="round"
