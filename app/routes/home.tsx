@@ -41,6 +41,23 @@ interface post {
   message?: undefined;
 }
 
+interface comment {
+  comment: {
+    id: string;
+    text: string;
+    datePublished: Date;
+    dateUpdated: Date;
+    authorId: string & {
+      id: string;
+      firstName: string;
+      lastName: string;
+      profilePictureAddress: string;
+    };
+    postId: string;
+    likedByUsers: string | null;
+  };
+}
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
@@ -230,30 +247,46 @@ function PostCommentForm({ post }: { post: { id: string } }) {
   );
 }
 
+function Comment({ comment }: comment) {
+  return (
+    <li className="p-3 inset-shadow-sm inset-shadow-indigo-200">
+      <h4 className="inline">
+        {comment.authorId.firstName} {comment.authorId.lastName}{" "}
+      </h4>
+      <img
+        src={`http://localhost:3000${comment.authorId.profilePictureAddress}`}
+        alt="commentor profile picture"
+        className="size-5 inline object-contain rounded-2xl border border-amber-300 hover:cursor-pointer hover:border-amber-500"
+      />
+      <h4 className="inline">
+        {" - "}
+        {comment.datePublished.toString()}
+      </h4>
+      <br />
+      <span>{comment.text}</span>
+      <div id="like-comment">{comment.likedByUsers}</div>
+    </li>
+  );
+}
+
 function CommentList({ post }: post) {
+  // const fetcher = useFetcher<{
+  //   postId: string;
+  //   like: boolean;
+  //   userId: string;
+  // }>();
+
+  // const fetcherLoader = useFetcher<typeof loaderIsPostLiked>();
+
+  // useEffect(() => {
+  //   fetcherLoader.load("comment/isLiked/" + );
+  // }, []);
+
   return (
     <ul id="comments">
       {post.comments &&
         post.comments.map((comment) => (
-          <li
-            key={comment.id}
-            className="p-3 inset-shadow-sm inset-shadow-indigo-200"
-          >
-            <h4 className="inline">
-              {comment.authorId.firstName} {comment.authorId.lastName}{" "}
-            </h4>
-            <img
-              src={`http://localhost:3000${comment.authorId.profilePictureAddress}`}
-              alt="commentor profile picture"
-              className="size-5 inline object-contain rounded-2xl border border-amber-300 hover:cursor-pointer hover:border-amber-500"
-            />
-            <h4 className="inline">
-              {" - "}
-              {comment.datePublished.toString()}
-            </h4>
-            <br />
-            <span>{comment.text}</span>
-          </li>
+          <Comment comment={comment} key={comment.id} />
         ))}
     </ul>
   );
