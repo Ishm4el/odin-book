@@ -13,10 +13,10 @@ export async function loader({ params, request }: Route.LoaderArgs) {
         and(eq(t.postId, params.postId), eq(t.userId, user.id)),
     });
 
-    // console.log(isPostLiked);
-
-    return isPostLiked;
+    return { like: false, ...isPostLiked };
   } catch (error) {
     throw new Error(JSON.stringify(error));
   }
 }
+
+// type ex = Pick<Awaited<ReturnType<typeof loader>>, "like" | "postId">;

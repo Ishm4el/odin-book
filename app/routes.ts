@@ -12,7 +12,7 @@ export default [
     route("/signUp", "routes/signUp.tsx"),
     route("/logout", "routes/logout.tsx"),
     layout("./layouts/ProtectedLayout.tsx", [
-      route("/post", "routes/post.tsx"),
+      route("/createPost", "routes/createPost.tsx"),
       route("/post/like/:postId", "routes/likePost.tsx"),
       route("/post/isLiked/:postId", "routes/isPostLiked.tsx"),
       route("/comment/like/:commentId", "routes/likeComment.tsx"),

@@ -11,50 +11,16 @@ import { toast, ToastContainer } from "react-toastify";
 import type { loader as loaderIsPostLiked } from "./isPostLiked";
 
 interface post {
-  post: {
+  title: string;
+  id: string;
+  text: string;
+  datePublished: Date;
+  dateUpdated: Date;
+  authorId: string & {
     id: string;
-    title: string;
-    text: string;
-    datePublished: Date;
-    dateUpdated: Date;
-    authorId: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      profilePictureAddress: string;
-    };
-    comments: {
-      id: string;
-      text: string;
-      datePublished: Date;
-      dateUpdated: Date;
-      authorId: string & {
-        id: string;
-        firstName: string;
-        lastName: string;
-        profilePictureAddress: string;
-      };
-      postId: string;
-      likedByUsers: string | null;
-    }[];
-  };
-  message?: undefined;
-}
-
-interface comment {
-  comment: {
-    id: string;
-    text: string;
-    datePublished: Date;
-    dateUpdated: Date;
-    authorId: string & {
-      id: string;
-      firstName: string;
-      lastName: string;
-      profilePictureAddress: string;
-    };
-    postId: string;
-    likedByUsers: string | null;
+    firstName: string;
+    lastName: string;
+    profilePictureAddress: string;
   };
 }
 
@@ -85,18 +51,18 @@ export async function loader({ context, request }: Route.LoaderArgs) {
               profilePictureAddress: true,
             },
           },
-          comments: {
-            with: {
-              authorId: {
-                columns: {
-                  firstName: true,
-                  lastName: true,
-                  id: true,
-                  profilePictureAddress: true,
-                },
-              },
-            },
-          },
+          // comments: {
+          //   with: {
+          //     authorId: {
+          //       columns: {
+          //         firstName: true,
+          //         lastName: true,
+          //         id: true,
+          //         profilePictureAddress: true,
+          //       },
+          //     },
+          //   },
+          // },
         },
       });
       return { user, postsToDisplay };
@@ -192,7 +158,7 @@ function LikePost({ postId }: { postId: string }) {
   );
 }
 
-function PostHeader({ post }: post) {
+function PostHeader({ post }: { post: post }) {
   return (
     <div className="flex w-full">
       <div className="flex flex-col bg-amber-50 p-2 flex-11">
@@ -214,91 +180,13 @@ function PostHeader({ post }: post) {
   );
 }
 
-function PostCommentForm({ post }: { post: { id: string } }) {
-  return (
-    <Form
-      method="post"
-      className="w-full flex p-2"
-      onSubmit={(e) => {
-        e.currentTarget.reset();
-      }}
-    >
-      <input
-        type="text"
-        hidden
-        value={post.id}
-        name="postId"
-        id="postId"
-        readOnly
-      />
-      <input
-        type="text"
-        className="flex-1 ring p-1"
-        name="comment"
-        id="comment"
-      />
-      <button
-        className="bg-blue-500 focus:bg-blue-700 transition-colors hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
-        type="submit"
-      >
-        Post Comment
-      </button>
-    </Form>
-  );
-}
-
-function Comment({ comment }: comment) {
-  return (
-    <li className="p-3 inset-shadow-sm inset-shadow-indigo-200">
-      <h4 className="inline">
-        {comment.authorId.firstName} {comment.authorId.lastName}{" "}
-      </h4>
-      <img
-        src={`http://localhost:3000${comment.authorId.profilePictureAddress}`}
-        alt="commentor profile picture"
-        className="size-5 inline object-contain rounded-2xl border border-amber-300 hover:cursor-pointer hover:border-amber-500"
-      />
-      <h4 className="inline">
-        {" - "}
-        {comment.datePublished.toString()}
-      </h4>
-      <br />
-      <span>{comment.text}</span>
-      <div id="like-comment">{comment.likedByUsers}</div>
-    </li>
-  );
-}
-
-function CommentList({ post }: post) {
-  // const fetcher = useFetcher<{
-  //   postId: string;
-  //   like: boolean;
-  //   userId: string;
-  // }>();
-
-  // const fetcherLoader = useFetcher<typeof loaderIsPostLiked>();
-
-  // useEffect(() => {
-  //   fetcherLoader.load("comment/isLiked/" + );
-  // }, []);
-
-  return (
-    <ul id="comments">
-      {post.comments &&
-        post.comments.map((comment) => (
-          <Comment comment={comment} key={comment.id} />
-        ))}
-    </ul>
-  );
-}
-
-function PostCard({ post }: post) {
+function PostCard({ post }: { post: post }) {
   return (
     <article className="bg-white mb-6 shadow-2xl">
       <PostHeader post={post} />
       <span className="lg p-5 block">{post.text}</span>
-      <PostCommentForm post={post} />
-      <CommentList post={post} />
+      {/* <PostCommentForm post={post} />
+      <CommentList post={post} /> */}
     </article>
   );
 }
@@ -314,7 +202,7 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      {loaderData.user ? (
+      {loaderData.user && loaderData.postsToDisplay && (
         <section>
           <h3 className="p-1 h-fit break-words bg-gray-200/50 w-full text-center mb-10">
             {JSON.stringify(loaderData.user)}
@@ -324,7 +212,8 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
               <PostCard post={post} key={post.id} />
             ))}
         </section>
-      ) : (
+      )}
+      {!loaderData.user && (
         <>
           <h1 className="text-7xl text-amber-300 bg-amber-50/60 w-full text-center p-10 text-shadow-lg">
             Welcome to the homepage!
