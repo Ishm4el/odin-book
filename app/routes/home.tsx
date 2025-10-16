@@ -10,20 +10,6 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import type { loader as loaderIsPostLiked } from "./isPostLiked";
 
-interface post {
-  title: string;
-  id: string;
-  text: string;
-  datePublished: Date;
-  dateUpdated: Date;
-  authorId: string & {
-    id: string;
-    firstName: string;
-    lastName: string;
-    profilePictureAddress: string;
-  };
-}
-
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
@@ -125,7 +111,7 @@ function LikePost({ postId }: { postId: string }) {
     <fetcher.Form
       method="post"
       action={`/post/like/${postId}`}
-      className="flex-1 flex items-center justify-center "
+      className="flex-1 flex items-center justify-center border-amber-50 border-2 bg-orange-50"
     >
       <button
         type="submit"
@@ -158,12 +144,16 @@ function LikePost({ postId }: { postId: string }) {
   );
 }
 
+type post = Required<
+  Pick<Awaited<ReturnType<typeof loader>>, "postsToDisplay">
+>["postsToDisplay"][number];
+
 function PostHeader({ post }: { post: post }) {
   return (
-    <div className="flex w-full">
-      <div className="flex flex-col bg-amber-50 p-2 flex-11">
+    <div className="flex">
+      <div className="flex flex-col bg-amber-50 p-2 flex-20">
         <div className="flex items-end gap-1">
-          <h1 className="text-2xl text-shadow">{post.title}</h1>
+          <h1 className="text-2xl text-shadow">{post.text}</h1>
           <h2 className="text-xl">
             {post.authorId.firstName} {post.authorId.lastName}
           </h2>
@@ -182,9 +172,9 @@ function PostHeader({ post }: { post: post }) {
 
 function PostCard({ post }: { post: post }) {
   return (
-    <article className="bg-white mb-6 shadow-2xl">
+    <article className="bg-white mb-6 shadow-xl">
       <PostHeader post={post} />
-      <span className="lg p-5 block">{post.text}</span>
+      <span className="p-5 block">{post.text}</span>
       {/* <PostCommentForm post={post} />
       <CommentList post={post} /> */}
     </article>
