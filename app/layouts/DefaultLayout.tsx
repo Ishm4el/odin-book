@@ -2,6 +2,7 @@ import { Outlet } from "react-router";
 import NavBar from "~/components/NavBar";
 import type { Route } from "./+types/DefaultLayout";
 import { sessionStorage, type User } from "~/services/auth.server";
+import { ToastContainer } from "react-toastify";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await sessionStorage.getSession(
@@ -41,6 +42,7 @@ export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
       <main className="flex  h-[calc(100vh-2.5rem)] md:flex-col w-full items-center bg-[url(/booksBackgroundImage.jpg)] bg-cover bg-center bg-no-repeat md:h-screen p-5">
         <Outlet />
       </main>
+      <ToastContainer />
     </>
   );
 }

@@ -4,7 +4,9 @@ import { authenticate } from "~/services/authenticate";
 
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
-import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
+import { useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 
 export function meta({ params }: Route.MetaArgs) {
   return [
@@ -61,6 +63,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
                 },
               },
             },
+            orderBy: (t, { desc }) => [desc(t.datePublished)],
           },
         },
       }),
@@ -72,14 +75,49 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   }
 }
 
+export async function action({ params, request }: Route.ActionArgs) {
+  const user = await authenticate(request);
+
+  const postId = params.postId;
+
+  const data = await request.formData();
+  const text = String(data.get("newComment"));
+
+  const db = database();
+
+  try {
+    if (text.length <= 0) throw "Text is required in order to comment!";
+
+    await db
+      .insert(schema.comments)
+      .values({ authorId: user.id, postId, text });
+
+    return { res: "Comment uploaded!" };
+  } catch (e) {
+    // console.error("Failed to create comment", e);
+    return { error: e };
+  }
+}
+
 export function HydrateFallback() {
   return <p>Loading Post!</p>;
 }
 
-export default function post({ loaderData }: Route.ComponentProps) {
+export default function post({ loaderData, actionData }: Route.ComponentProps) {
+  const refForm = useRef<HTMLFormElement | null>(null);
+
+  useEffect(() => {
+    if (actionData?.error) {
+      toast.error(JSON.stringify(actionData.error));
+    } else if (actionData?.res && refForm.current) {
+      refForm.current.reset();
+      toast.success(JSON.stringify(actionData.res));
+    }
+  }, [actionData]);
+
   if (loaderData.post)
     return (
-      <article className="h-full bg-amber-50/20 w-full flex flex-col justify-between">
+      <article className="h-full bg-amber-50/20 w-full flex flex-col justify-between overflow-y-scroll">
         <section id="post-content" className="w-full">
           <div id="post-header" className="bg-amber-100/99">
             <h1 className="text-4xl p-2">{loaderData.post.title}</h1>
@@ -95,13 +133,25 @@ export default function post({ loaderData }: Route.ComponentProps) {
             {loaderData.post.text}
           </div>
         </section>
+
         <section id="post-comments" className="bg-white">
-          <Form method="post" className="shadow mb-3 p-1 flex flex-col gap-3">
+          <Form
+            method="post"
+            className="shadow mb-3 p-1 flex flex-col gap-3"
+            ref={refForm}
+          >
             <div className="flex flex-col">
-              <label htmlFor="newComment" className="text-center mb-1 underline">
+              <label
+                htmlFor="newComment"
+                className="text-center mb-1 underline"
+              >
                 Comment?
               </label>
-              <textarea name="newComment" id="newComment" className="ring"></textarea>
+              <textarea
+                name="newComment"
+                id="newComment"
+                className="ring mx-3"
+              ></textarea>
             </div>
             <button
               type="submit"
@@ -110,9 +160,10 @@ export default function post({ loaderData }: Route.ComponentProps) {
               Post Comment
             </button>
           </Form>
+
           <ul>
             {loaderData.post.comments.map((comment) => (
-              <li className="mb-1 p-1 shadow">
+              <li className="mb-1 p-1 shadow" key={comment.id}>
                 <div className="flex gap-3 bg-amber-50/90">
                   <h2>
                     {comment.authorId.firstName} {comment.authorId.lastName}
