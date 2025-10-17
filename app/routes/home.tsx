@@ -9,6 +9,7 @@ import { authenticate } from "~/services/authenticate";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import type { loader as loaderIsPostLiked } from "./isPostLiked";
+import { and, asc, eq, exists, getTableColumns, sql } from "drizzle-orm";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -26,31 +27,45 @@ export async function loader({ context, request }: Route.LoaderArgs) {
   const db = database();
   if (user)
     try {
-      const postsToDisplay = await db.query.posts.findMany({
-        orderBy: (posts, { asc }) => [asc(posts.datePublished)],
-        with: {
-          authorId: {
-            columns: {
-              firstName: true,
-              lastName: true,
-              id: true,
-              profilePictureAddress: true,
-            },
-          },
-          // comments: {
-          //   with: {
-          //     authorId: {
-          //       columns: {
-          //         firstName: true,
-          //         lastName: true,
-          //         id: true,
-          //         profilePictureAddress: true,
-          //       },
-          //     },
-          //   },
-          // },
-        },
-      });
+      const isLikedByUser = exists(
+        db
+          .select()
+          .from(schema.usersLikedPosts)
+          .where(
+            and(
+              eq(schema.usersLikedPosts.postId, schema.posts.id),
+              eq(schema.usersLikedPosts.userId, user.id)
+            )
+          )
+      );
+
+      const { password, created, email, ...restOfUser } = getTableColumns(
+        schema.users
+      );
+
+      const postsToDisplay = await db
+        .select({
+          post: getTableColumns(schema.posts),
+          userHasLiked: sql<boolean>`EXISTS((${db
+            .select()
+            .from(schema.usersLikedPosts)
+            .where(
+              and(
+                eq(schema.usersLikedPosts.postId, schema.posts.id),
+                and(
+                  eq(schema.usersLikedPosts.userId, user.id),
+                  eq(schema.usersLikedPosts.like, true)
+                )
+              )
+            )}))`,
+          user: { ...restOfUser },
+        })
+        .from(schema.posts)
+        .leftJoin(schema.users, eq(schema.posts.authorId, schema.users.id))
+        .orderBy(asc(schema.posts.datePublished));
+
+      console.log(postsToDisplay);
+
       return { user, postsToDisplay };
     } catch (error) {
       throw new Error(JSON.stringify(error));
@@ -144,37 +159,38 @@ function LikePost({ postId }: { postId: string }) {
   );
 }
 
-type post = Required<
+type loadedData = Required<
   Pick<Awaited<ReturnType<typeof loader>>, "postsToDisplay">
 >["postsToDisplay"][number];
 
-function PostHeader({ post }: { post: post }) {
+function PostHeader({ loadedData }: { loadedData: loadedData }) {
   return (
     <div className="flex">
       <div className="flex flex-col bg-amber-50 p-2 flex-20">
         <div className="flex items-end gap-1">
-          <h1 className="text-2xl text-shadow">{post.text}</h1>
+          <h1 className="text-2xl text-shadow">{loadedData.post.text}</h1>
           <h2 className="text-xl">
-            {post.authorId.firstName} {post.authorId.lastName}
+            {loadedData.user?.firstName} {loadedData.user?.lastName}
           </h2>
         </div>
         <h3 className="text-sm">
-          {`${post.datePublished.toString()}`}{" "}
-          {post.datePublished.toString() !== post.dateUpdated.toString()
-            ? post.dateUpdated.toString()
+          {`${loadedData.post.datePublished.toString()}`}{" "}
+          {loadedData.post.datePublished.toString() !==
+          loadedData.post.dateUpdated.toString()
+            ? loadedData.post.dateUpdated.toString()
             : null}
         </h3>
       </div>
-      <LikePost postId={post.id} />
+      <LikePost postId={loadedData.post.id} />
     </div>
   );
 }
 
-function PostCard({ post }: { post: post }) {
+function PostCard({ loadedData }: { loadedData: loadedData }) {
   return (
     <article className="bg-white mb-6 shadow-xl">
-      <PostHeader post={post} />
-      <span className="p-5 block">{post.text}</span>
+      <PostHeader loadedData={loadedData} />
+      <span className="p-5 block">{loadedData.post.text}</span>
       {/* <PostCommentForm post={post} />
       <CommentList post={post} /> */}
     </article>
@@ -199,7 +215,7 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
           </h3>
           {loaderData.postsToDisplay &&
             loaderData.postsToDisplay.map((post) => (
-              <PostCard post={post} key={post.id} />
+              <PostCard loadedData={post} key={post.post.id} />
             ))}
         </section>
       )}

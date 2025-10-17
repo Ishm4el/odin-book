@@ -15,6 +15,7 @@ export default [
       route("/createPost", "routes/createPost.tsx"),
       route("/post/like/:postId", "routes/likePost.tsx"),
       route("/post/isLiked/:postId", "routes/isPostLiked.tsx"),
+      route("/post/:postId", "routes/post.tsx"),
       route("/comment/like/:commentId", "routes/likeComment.tsx"),
       route("/comment/isLiked/:commentId", "routes/isCommentLiked.tsx"),
       route("/comments/:postId", "routes/comments.tsx"),
