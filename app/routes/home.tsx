@@ -4,7 +4,7 @@ import * as schema from "~/database/schema";
 import type { Route } from "./+types/home";
 
 import { sessionStorage } from "~/services/auth.server";
-import { Form, useFetcher } from "react-router";
+import { Form, NavLink, useFetcher } from "react-router";
 import { authenticate } from "~/services/authenticate";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -157,8 +157,13 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
   return (
     <div className="flex">
       <div className="flex flex-col bg-amber-50 p-2 flex-20">
-        <div className="flex items-end gap-1">
-          <h1 className="text-2xl text-shadow">{loadedData.post.text}</h1>
+        <div className="flex items-end gap-5 flex-wrap">
+          <NavLink
+            to={`/post/${loadedData.post.id}`}
+            className="text-3xl text-shadow-amber-500 hover:underline hover:text-amber-900"
+          >
+            {loadedData.post.title}
+          </NavLink>
           <h2 className="text-xl">
             {loadedData.user?.firstName} {loadedData.user?.lastName}
           </h2>
