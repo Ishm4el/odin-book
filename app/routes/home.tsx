@@ -102,7 +102,6 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 function LikePost({ postId }: { postId: string }) {
-  const [isHovered, setIsHovered] = useState(false);
   const fetcher = useFetcher<{
     postId: string;
     like: boolean;
@@ -115,13 +114,6 @@ function LikePost({ postId }: { postId: string }) {
     fetcherLoader.load("post/isLiked/" + postId);
   }, []);
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
   return (
     <fetcher.Form
       method="post"
@@ -130,8 +122,6 @@ function LikePost({ postId }: { postId: string }) {
     >
       <button
         type="submit"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         className="hover:cursor-pointer w-full"
         name="shouldLike"
         value={fetcherLoader.data?.like ? "false" : "true"}
