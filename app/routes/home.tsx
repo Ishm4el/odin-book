@@ -4,7 +4,7 @@ import * as schema from "~/database/schema";
 import type { Route } from "./+types/home";
 
 import { sessionStorage } from "~/services/auth.server";
-import { Form, NavLink, useFetcher } from "react-router";
+import { Form, NavLink, useFetcher, useNavigate } from "react-router";
 import { authenticate } from "~/services/authenticate";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -154,6 +154,7 @@ type loadedData = Required<
 >["postsToDisplay"][number];
 
 function PostHeader({ loadedData }: { loadedData: loadedData }) {
+  const navigate = useNavigate();
   return (
     <div className="flex">
       <div className="flex flex-col bg-amber-50 p-2 flex-20">
@@ -164,7 +165,12 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
           >
             {loadedData.post.title}
           </NavLink>
-          <h2 className="text-xl">
+          <h2
+            className="text-xl hover:text-amber-900 w-fit hover:cursor-pointer active:text-amber-500"
+            onClick={() => {
+              navigate(`/profile/${loadedData.post.authorId}`);
+            }}
+          >
             {loadedData.user?.firstName} {loadedData.user?.lastName}
           </h2>
         </div>

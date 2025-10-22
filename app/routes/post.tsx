@@ -120,10 +120,15 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
   if (loaderData.post)
     return (
       <article className="h-full bg-amber-50/20 w-full flex flex-col justify-between overflow-y-scroll">
-        <section id="post-content" className="w-full">
+        <section id="post-content">
           <div id="post-header" className="bg-amber-100/99">
             <h1 className="text-4xl p-2">{loaderData.post.title}</h1>
-            <h2 className="p-2 text-xl">
+            <h2
+              className="p-2 text-xl hover:text-amber-900 w-fit hover:cursor-pointer active:text-amber-500"
+              onClick={() => {
+                navigate(`/profile/${loaderData.post?.authorId.id}`);
+              }}
+            >
               {loaderData.post.authorId.lastName},{" "}
               {loaderData.post.authorId.firstName}
             </h2>
