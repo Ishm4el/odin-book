@@ -19,6 +19,7 @@ export default [
       route("/comment/like/:commentId", "routes/likeComment.tsx"),
       route("/comment/isLiked/:commentId", "routes/isCommentLiked.tsx"),
       route("/comments/:postId", "routes/comments.tsx"),
+      route("/profile/:profileId", "routes/otherUserProfile.tsx"),
     ]),
   ]),
 ] satisfies RouteConfig;

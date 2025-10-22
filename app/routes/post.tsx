@@ -1,4 +1,4 @@
-import { Form } from "react-router";
+import { Form, useNavigate } from "react-router";
 import type { Route } from "./+types/post";
 import { authenticate } from "~/services/authenticate";
 
@@ -104,6 +104,8 @@ export function HydrateFallback() {
 }
 
 export default function post({ loaderData, actionData }: Route.ComponentProps) {
+  const navigate = useNavigate();
+
   const refForm = useRef<HTMLFormElement | null>(null);
 
   useEffect(() => {
@@ -165,7 +167,11 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
             {loaderData.post.comments.map((comment) => (
               <li className="mb-1 p-1 shadow" key={comment.id}>
                 <div className="flex gap-3 bg-amber-50/90">
-                  <h2>
+                  <h2
+                    onClick={() => {
+                      navigate(`/profile/${comment.authorId.id}`);
+                    }}
+                  >
                     {comment.authorId.firstName} {comment.authorId.lastName}
                   </h2>
                   <h3>{comment.datePublished.toString()}</h3>
