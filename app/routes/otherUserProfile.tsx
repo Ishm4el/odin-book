@@ -1,4 +1,4 @@
-import { data, Form } from "react-router";
+import { data, Form, isRouteErrorResponse, useRouteError } from "react-router";
 
 import type { Route } from "./+types/otherUserProfile";
 
@@ -10,7 +10,7 @@ import { authenticate } from "~/services/authenticate";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
-    { title: `Viewing User: ${loaderData.id}` },
+    { title: `Viewing User: ${loaderData ? loaderData.id : "ERROR"}` },
     { name: "description", content: "Display a user" },
   ];
 }
@@ -49,6 +49,9 @@ function Descriptor({ title, info }: { title: string; info: string }) {
 export async function action({ request, params }: Route.ActionArgs) {
   const user = await authenticate(request);
   const otherUserId = params.profileId;
+
+  if (user.id === otherUserId)
+    throw data("You cannot follow yourself", { status: 409 });
 
   const db = database();
 
@@ -106,4 +109,33 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
       </section>
     </article>
   );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  const containerClass: React.ComponentProps<"div">["className"] =
+    "bg-white w-full h-full flex flex-col justify-center items-center";
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div className={containerClass}>
+        <h1 className="font-bold text-2xl">
+          {error.status} {error.statusText}
+        </h1>
+        <p>{error.data}</p>
+      </div>
+    );
+  } else if (error instanceof Error) {
+    return (
+      <div className={containerClass}>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
+  }
 }
