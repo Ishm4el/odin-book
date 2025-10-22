@@ -6,6 +6,7 @@ import { database } from "~/database/context";
 import * as schema from "~/database/schema";
 
 import { camelCaseToTitleCase } from "~/utility/utility";
+import { authenticate } from "~/services/authenticate";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
@@ -14,14 +15,18 @@ export function meta({ loaderData }: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ params, request }: Route.LoaderArgs) {
   const otherUserId = params.profileId;
+  const user = await authenticate(request);
 
   const db = database();
 
   const otherUserData = await db.query.users.findFirst({
     where: (t, { eq }) => eq(t.id, otherUserId),
     columns: { password: false, birthdate: false, email: false },
+    with: {
+      followers: { where: (table, { eq }) => eq(table.followerId, user.id) },
+    },
   });
 
   if (otherUserData)
@@ -41,8 +46,20 @@ function Descriptor({ title, info }: { title: string; info: string }) {
   );
 }
 
+export async function action({ request, params }: Route.ActionArgs) {
+  const user = await authenticate(request);
+  const otherUserId = params.profileId;
+
+  const db = database();
+
+  await db
+    .insert(schema.follows)
+    .values({ followeeId: otherUserId, followerId: user.id });
+}
+
 export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
-  const { id, profilePictureAddress, created, ...toDisplay } = loaderData;
+  const { id, profilePictureAddress, followers, created, ...toDisplay } =
+    loaderData;
   const entries = Object.entries(toDisplay);
 
   const descriptors = entries.map((entry) => (
@@ -52,6 +69,11 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
       key={entry[0]}
     />
   ));
+
+  const doesFollowDisplay =
+    followers.length > 0 ? (
+      <div>{JSON.stringify(followers[0], null, 2)}</div>
+    ) : null;
 
   return (
     <article className="bg-white w-full">
@@ -77,9 +99,10 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
             name="userId"
             className="border rounded hover:cursor-pointer bg-linear-to-bl from-amber-100 to-orange-200 hover:bg-linear-to-br hover:from-amber-50 hover:to-orange-100 p-1 active:from-amber-400 active:to-orange-400"
           >
-            Send Friend Request
+            Follow
           </button>
         </Form>
+        {doesFollowDisplay}
       </section>
     </article>
   );
