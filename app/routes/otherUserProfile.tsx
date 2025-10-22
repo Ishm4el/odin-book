@@ -125,7 +125,7 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
             {doesFollowDisplay ? "Unfollow" : "Follow"}
           </button>
         </Form>
-        {doesFollowDisplay}
+        {/* {doesFollowDisplay} */}
       </section>
     </article>
   );
