@@ -7,6 +7,7 @@ import * as schema from "~/database/schema";
 
 import { camelCaseToTitleCase } from "~/utility/utility";
 import { authenticate } from "~/services/authenticate";
+import { and, eq } from "drizzle-orm";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
@@ -55,9 +56,24 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   const db = database();
 
-  await db
-    .insert(schema.follows)
-    .values({ followeeId: otherUserId, followerId: user.id });
+  switch (request.method) {
+    case "POST":
+      await db
+        .insert(schema.follows)
+        .values({ followeeId: otherUserId, followerId: user.id });
+      break;
+
+    case "DELETE":
+      await db
+        .delete(schema.follows)
+        .where(
+          and(
+            eq(schema.follows.followeeId, otherUserId),
+            eq(schema.follows.followerId, user.id)
+          )
+        );
+      break;
+  }
 }
 
 export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
@@ -97,12 +113,16 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
         {descriptors}
       </section>
       <section id="user-controls" className="bg-white p-2">
-        <Form method="POST">
+        <Form method={doesFollowDisplay ? "DELETE" : "POST"}>
           <button
             name="userId"
-            className="border rounded hover:cursor-pointer bg-linear-to-bl from-amber-100 to-orange-200 hover:bg-linear-to-br hover:from-amber-50 hover:to-orange-100 p-1 active:from-amber-400 active:to-orange-400"
+            className={
+              doesFollowDisplay
+                ? "border rounded hover:cursor-pointer bg-linear-to-bl from-red-100 to-rose-200 hover:bg-linear-to-br hover:from-red-50 hover:to-rose-100 p-1 active:from-red-400 active:to-rose-400"
+                : "border rounded hover:cursor-pointer bg-linear-to-bl from-amber-100 to-orange-200 hover:bg-linear-to-br hover:from-amber-50 hover:to-orange-100 p-1 active:from-amber-400 active:to-orange-400"
+            }
           >
-            Follow
+            {doesFollowDisplay ? "Unfollow" : "Follow"}
           </button>
         </Form>
         {doesFollowDisplay}
