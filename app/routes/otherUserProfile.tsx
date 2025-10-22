@@ -1,4 +1,4 @@
-import { data } from "react-router";
+import { data, Form } from "react-router";
 
 import type { Route } from "./+types/otherUserProfile";
 
@@ -6,6 +6,13 @@ import { database } from "~/database/context";
 import * as schema from "~/database/schema";
 
 import { camelCaseToTitleCase } from "~/utility/utility";
+
+export function meta({ loaderData }: Route.MetaArgs) {
+  return [
+    { title: `Viewing User: ${loaderData.id}` },
+    { name: "description", content: "Display a user" },
+  ];
+}
 
 export async function loader({ params }: Route.LoaderArgs) {
   const otherUserId = params.profileId;
@@ -63,6 +70,16 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
       </section>
       <section id="other-user-info" className="p-2 text-lg">
         {descriptors}
+      </section>
+      <section id="user-controls" className="bg-white p-2">
+        <Form method="POST">
+          <button
+            name="userId"
+            className="border rounded hover:cursor-pointer bg-linear-to-bl from-amber-100 to-orange-200 hover:bg-linear-to-br hover:from-amber-50 hover:to-orange-100 p-1 active:from-amber-400 active:to-orange-400"
+          >
+            Send Friend Request
+          </button>
+        </Form>
       </section>
     </article>
   );
