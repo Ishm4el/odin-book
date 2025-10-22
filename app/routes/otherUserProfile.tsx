@@ -19,16 +19,16 @@ export async function loader({ params }: Route.LoaderArgs) {
 
   if (otherUserData)
     return {
-      "creationDate": otherUserData.created.toDateString(),
       ...otherUserData,
+      creationDate: otherUserData.created.toDateString(),
     };
   throw data("User not found", { status: 404 });
 }
 
 function Descriptor({ title, info }: { title: string; info: string }) {
   return (
-    <div>
-      <h2>{title}: </h2>
+    <div className="flex gap-2">
+      <h2 className="font-medium text-orange-950">{title}: </h2>
       <span>{info}</span>
     </div>
   );
@@ -47,12 +47,23 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
   ));
 
   return (
-    <article>
-      <section id="other-user-header">
-        <h1>{loaderData.firstName}</h1>
-        <img src={loaderData.profilePictureAddress} alt="" />
+    <article className="bg-white w-full">
+      <section
+        id="other-user-header"
+        className="items-center text-4xl w-full flex gap-2 bg-amber-50 p-2 font-semibold"
+      >
+        <h1>
+          {loaderData.firstName} {loaderData.lastName}
+        </h1>
+        <img
+          src={loaderData.profilePictureAddress}
+          alt=""
+          className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 size-[40px]"
+        />
       </section>
-      <section id="other-user-info">{descriptors}</section>
+      <section id="other-user-info" className="p-2 text-lg">
+        {descriptors}
+      </section>
     </article>
   );
 }
