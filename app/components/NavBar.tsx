@@ -1,6 +1,5 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import NavigationLink from "./NavigationLink";
-import { useEffect, useState } from "react";
 
 export default function NavBar({
   navigationList = [
@@ -12,13 +11,15 @@ export default function NavBar({
   className,
 }: {
   navigationList?: { title: string; to: string }[];
-  user?: { name: string; profilePictureURL: string };
+  user?: { name: string; profilePictureURL: string; userId: string };
   className?: string;
 }) {
+  const navigate = useNavigate();
   return (
     <nav
       className={
-        "w-full flex h-10 bg-sky-50 md:flex-col md:w-[8dvw] md:h-dvh md:bg-linear-to-b md:from-sky-50 md:to-amber-50 " + className
+        "w-full flex h-10 bg-sky-50 md:flex-col md:w-[8dvw] md:h-dvh md:bg-linear-to-b md:from-sky-50 md:to-amber-50 " +
+        className
       }
     >
       <div className="w-1/3 flex justify-center items-center md:w-full ">
@@ -41,7 +42,12 @@ export default function NavBar({
           </li>
         ))}
         {user ? (
-          <li className="font-medium text-lg flex gap-1 h-full items-center mt-5">
+          <li
+            className="font-medium text-lg flex gap-1 h-full items-center mt-5"
+            onClick={() => {
+              navigate(`/profile/${user.userId}`);
+            }}
+          >
             <span className="hover:cursor-pointer text-orange-300 text-shadow hover:text-orange-400">
               {user.name}
             </span>

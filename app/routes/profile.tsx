@@ -34,6 +34,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
     return {
       ...otherUserData,
       creationDate: otherUserData.created.toDateString(),
+      sameUser: otherUserId === user.id,
     };
   throw data("User not found", { status: 404 });
 }
@@ -76,9 +77,15 @@ export async function action({ request, params }: Route.ActionArgs) {
   }
 }
 
-export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
-  const { id, profilePictureAddress, followers, created, ...toDisplay } =
-    loaderData;
+export default function profile({ loaderData }: Route.ComponentProps) {
+  const {
+    id,
+    profilePictureAddress,
+    followers,
+    created,
+    sameUser,
+    ...toDisplay
+  } = loaderData;
   const entries = Object.entries(toDisplay);
 
   const descriptors = entries.map((entry) => (
@@ -93,6 +100,21 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
     followers.length > 0 ? (
       <div>{JSON.stringify(followers[0], null, 2)}</div>
     ) : null;
+
+  const userControlsRender = sameUser ? null : (
+    <Form method={doesFollowDisplay ? "DELETE" : "POST"}>
+      <button
+        name="userId"
+        className={
+          doesFollowDisplay
+            ? "border rounded hover:cursor-pointer bg-linear-to-bl from-red-100 to-rose-200 hover:bg-linear-to-br hover:from-red-50 hover:to-rose-100 p-1 active:from-red-400 active:to-rose-400"
+            : "border rounded hover:cursor-pointer bg-linear-to-bl from-amber-100 to-orange-200 hover:bg-linear-to-br hover:from-amber-50 hover:to-orange-100 p-1 active:from-amber-400 active:to-orange-400"
+        }
+      >
+        {doesFollowDisplay ? "Unfollow" : "Follow"}
+      </button>
+    </Form>
+  );
 
   return (
     <article className="bg-white w-full">
@@ -113,19 +135,7 @@ export default function otherUserProfile({ loaderData }: Route.ComponentProps) {
         {descriptors}
       </section>
       <section id="user-controls" className="bg-white p-2">
-        <Form method={doesFollowDisplay ? "DELETE" : "POST"}>
-          <button
-            name="userId"
-            className={
-              doesFollowDisplay
-                ? "border rounded hover:cursor-pointer bg-linear-to-bl from-red-100 to-rose-200 hover:bg-linear-to-br hover:from-red-50 hover:to-rose-100 p-1 active:from-red-400 active:to-rose-400"
-                : "border rounded hover:cursor-pointer bg-linear-to-bl from-amber-100 to-orange-200 hover:bg-linear-to-br hover:from-amber-50 hover:to-orange-100 p-1 active:from-amber-400 active:to-orange-400"
-            }
-          >
-            {doesFollowDisplay ? "Unfollow" : "Follow"}
-          </button>
-        </Form>
-        {/* {doesFollowDisplay} */}
+        {userControlsRender}
       </section>
     </article>
   );

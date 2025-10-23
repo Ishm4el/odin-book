@@ -34,6 +34,7 @@ export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
           user={{
             name: loaderData.user.firstName,
             profilePictureURL: loaderData.user.profilePictureAddress,
+            userId: loaderData.user.id,
           }}
         />
       ) : (
