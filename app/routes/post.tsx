@@ -171,15 +171,23 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
           <ul>
             {loaderData.post.comments.map((comment) => (
               <li className="mb-1 p-1 shadow" key={comment.id}>
-                <div className="flex gap-3 bg-amber-50/90">
-                  <h2
+                <div className="flex gap-2 bg-amber-50/90">
+                  <div
+                    className="flex gap-1"
                     onClick={() => {
                       navigate(`/profile/${comment.authorId.id}`);
                     }}
                   >
-                    {comment.authorId.firstName} {comment.authorId.lastName}
-                  </h2>
-                  <h3>{comment.datePublished.toString()}</h3>
+                    <h2 className="hover:text-amber-900 w-fit hover:cursor-pointer active:text-amber-500">
+                      {comment.authorId.firstName} {comment.authorId.lastName}
+                    </h2>
+                    <img
+                      src={comment.authorId.profilePictureAddress}
+                      alt=""
+                      className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 size-[calc(var(--text-base--line-height)*var(--text-base))]"
+                    />
+                  </div>
+                  <h3>{comment.datePublished.toDateString()}</h3>
                 </div>
                 <div>{comment.text}</div>
               </li>
