@@ -1,6 +1,6 @@
 import { data, Form, isRouteErrorResponse, useRouteError } from "react-router";
 
-import type { Route } from "./+types/otherUserProfile";
+import type { Route } from "./+types/profile";
 
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
