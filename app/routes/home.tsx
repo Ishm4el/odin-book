@@ -39,9 +39,8 @@ export async function loader({ context, request }: Route.LoaderArgs) {
           )
       );
 
-      const { password, created, email, ...restOfUser } = getTableColumns(
-        schema.users
-      );
+      const { password, created, email, birthdate, ...restOfUser } =
+        getTableColumns(schema.users);
 
       const postsToDisplay = await db
         .select({
@@ -165,14 +164,21 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
           >
             {loadedData.post.title}
           </NavLink>
-          <h2
-            className="text-xl hover:text-amber-900 w-fit hover:cursor-pointer active:text-amber-500"
+          <div
+            className="flex gap-1"
             onClick={() => {
               navigate(`/profile/${loadedData.post.authorId}`);
             }}
           >
-            {loadedData.user?.firstName} {loadedData.user?.lastName}
-          </h2>
+            <h2 className="text-xl hover:text-amber-900 w-fit hover:cursor-pointer active:text-amber-500">
+              {loadedData.user?.firstName} {loadedData.user?.lastName}
+            </h2>
+            <img
+              src={`http://localhost:3000${loadedData.user?.profilePictureAddress}`}
+              alt=""
+              className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 size-[calc(var(--text-xl--line-height)*var(--text-xl))]"
+            />
+          </div>
         </div>
         <h3 className="text-sm">
           {`${loadedData.post.datePublished.toString()}`}{" "}
