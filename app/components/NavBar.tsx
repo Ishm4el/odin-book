@@ -5,7 +5,7 @@ export default function NavBar({
   navigationList = [
     { title: "Home", to: "/" },
     { title: "Login", to: "/login" },
-    { title: "Sign Up", to: "/sign_up" },
+    { title: "Sign Up", to: "/signUp" },
   ],
   user,
   className,
@@ -18,7 +18,7 @@ export default function NavBar({
   return (
     <nav
       className={
-        "w-full flex h-10 bg-sky-50 md:flex-col md:w-[8dvw] md:h-dvh bg-linear-to-b from-sky-50 to-amber-50 " +
+        "w-full flex h-10 bg-sky-50 md:flex-col md:w-fit md:h-dvh bg-linear-to-b md:px-2 from-sky-50 to-amber-50 " +
         className
       }
     >
