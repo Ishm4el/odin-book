@@ -1,4 +1,10 @@
-import { data, Form, isRouteErrorResponse, useRouteError } from "react-router";
+import {
+  data,
+  Form,
+  isRouteErrorResponse,
+  useNavigate,
+  useRouteError,
+} from "react-router";
 
 import type { Route } from "./+types/profile";
 
@@ -26,14 +32,36 @@ export async function loader({ params, request }: Route.LoaderArgs) {
     where: (t, { eq }) => eq(t.id, otherUserId),
     columns: { password: false, birthdate: false, email: false },
     with: {
-      followers: { where: (table, { eq }) => eq(table.followerId, user.id) },
+      followers: {
+        with: {
+          follower: {
+            columns: { password: false, email: false, birthdate: false },
+          },
+        },
+      },
     },
+  });
+
+  const userFollows = await db.query.follows.findMany({
+    where: (t, { eq }) => eq(t.followerId, user.id),
+    with: {
+      followee: {
+        columns: { password: false, email: false, birthdate: false },
+      },
+    },
+  });
+
+  const doesCurrentUserFollow = await db.query.follows.findFirst({
+    where: (table, { eq, and }) =>
+      and(eq(table.followeeId, otherUserId), eq(table.followerId, user.id)),
   });
 
   if (otherUserData)
     return {
       ...otherUserData,
       creationDate: otherUserData.created.toDateString(),
+      doesCurrentUserFollow,
+      userFollows: userFollows,
       sameUser: otherUserId === user.id,
     };
   throw data("User not found", { status: 404 });
@@ -77,12 +105,45 @@ export async function action({ request, params }: Route.ActionArgs) {
   }
 }
 
+function RenderListItemUser({
+  followerId,
+  profilePictureAddress,
+  firstName,
+  lastName,
+}: {
+  [key: string]: string;
+}) {
+  const navigate = useNavigate();
+
+  return (
+    <li
+      className="outline text-xl p-0.5 bg-slate-50 hover:bg-white active:bg-amber-100 hover:cursor-pointer"
+      onClick={() => {
+        navigate(`/profile/${followerId}`);
+      }}
+    >
+      <div className="flex items-center p-1 gap-2">
+        <img
+          src={profilePictureAddress}
+          className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 size-[calc(var(--text-xl--line-height)*var(--text-xl))]"
+        />
+        <h4>
+          {firstName} {lastName}
+        </h4>
+      </div>
+    </li>
+  );
+}
+
 export default function profile({ loaderData }: Route.ComponentProps) {
+  const navigate = useNavigate();
   const {
     id,
     profilePictureAddress,
     followers,
+    userFollows,
     created,
+    doesCurrentUserFollow,
     sameUser,
     ...toDisplay
   } = loaderData;
@@ -96,12 +157,49 @@ export default function profile({ loaderData }: Route.ComponentProps) {
     />
   ));
 
-  const doesFollowDisplay =
-    followers.length > 0 ? (
-      <div>{JSON.stringify(followers[0], null, 2)}</div>
-    ) : null;
+  const doesFollowDisplay = doesCurrentUserFollow ? (
+    <div>{JSON.stringify(doesCurrentUserFollow, null, 2)}</div>
+  ) : null;
 
-  const userControlsRender = sameUser ? null : (
+  const userControlsRender = sameUser ? (
+    <div className="md:flex md:gap-3 w-full">
+      <div className="flex-1">
+        <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
+        <ul
+          className={`h-30 outline ${followers.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
+        >
+          {followers.map((user) => (
+            <>
+              <RenderListItemUser
+                firstName={user.follower.firstName}
+                followerId={user.followerId}
+                lastName={user.follower.lastName}
+                profilePictureAddress={user.follower.profilePictureAddress}
+              />
+            </>
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex-1">
+        <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
+        <ul
+          className={`h-30 outline ${userFollows.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
+        >
+          {userFollows.map((user) => (
+            <>
+              <RenderListItemUser
+                firstName={user.followee.firstName}
+                followerId={user.followeeId}
+                lastName={user.followee.lastName}
+                profilePictureAddress={user.followee.profilePictureAddress}
+              />
+            </>
+          ))}
+        </ul>
+      </div>
+    </div>
+  ) : (
     <Form method={doesFollowDisplay ? "DELETE" : "POST"}>
       <button
         name="userId"
