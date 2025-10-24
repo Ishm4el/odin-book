@@ -1,4 +1,4 @@
-import { Form } from "react-router";
+import { Form, useNavigate } from "react-router";
 import type { Route } from "./+types/createPost";
 
 import { authenticate } from "~/services/authenticate";
@@ -6,6 +6,8 @@ import invariant from "tiny-invariant";
 
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
+import { useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -34,9 +36,23 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Component({ actionData }: Route.ComponentProps) {
+  const formRef = useRef<null | HTMLFormElement>(null);
+  useEffect(() => {
+    if (actionData) {
+      if (formRef.current) formRef.current.reset();
+      toast.success(
+        "The post '" + actionData[0].title + "'!\nhas been posted",
+        {
+          toastId: "PostPublishOutSuccess",
+          ariaLabel: "Post uploaded!",
+          onClose: () => {},
+        }
+      );
+    }
+  }, [actionData]);
+
   return (
-    <Form className="w-9/10 bg-amber-50/90" method="post">
-      {actionData ? <span>{JSON.stringify(actionData)}</span> : null}
+    <Form className="w-9/10 bg-amber-50/90" method="post" ref={formRef}>
       <h1 className="text-5xl p-5 text-center">Create a new post</h1>
       <div className="flex items-center justify-center flex-col">
         <label
