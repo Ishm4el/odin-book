@@ -18,7 +18,7 @@ export default function NavBar({
   return (
     <nav
       className={
-        "w-full flex h-10 bg-sky-50 md:flex-col md:w-[8dvw] md:h-dvh md:bg-linear-to-b md:from-sky-50 md:to-amber-50 " +
+        "w-full flex h-10 bg-sky-50 md:flex-col md:w-[8dvw] md:h-dvh bg-linear-to-b from-sky-50 to-amber-50 " +
         className
       }
     >
@@ -43,19 +43,19 @@ export default function NavBar({
         ))}
         {user ? (
           <li
-            className="font-medium text-lg flex gap-1 h-full items-center mt-5"
+            className="font-medium text-lg flex gap-1 items-center self-center justify-self-center"
             onClick={() => {
               navigate(`/profile/${user.userId}`);
             }}
           >
-            <span className="hover:cursor-pointer text-orange-300 text-shadow hover:text-orange-400">
+            <span className="hover:cursor-pointer text-orange-300 text-shadow hover:text-orange-400 active:text-amber-600">
               {user.name}
             </span>
             <img
               src={`http://localhost:3000${user.profilePictureURL}`}
               alt="User Avatar"
-              className="object-contain h-8 rounded-2xl w-8 border border-amber-300 hover:cursor-pointer hover:border-amber-500"
-            />
+              className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 active:border-amber-600 size-[calc(var(--text-xl--line-height)*var(--text-xl))]"
+              />
           </li>
         ) : null}
       </menu>

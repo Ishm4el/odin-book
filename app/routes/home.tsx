@@ -117,7 +117,7 @@ function LikePost({ postId }: { postId: string }) {
     <fetcher.Form
       method="post"
       action={`/post/like/${postId}`}
-      className="flex-1 flex items-center justify-center border-amber-50 border-2 bg-orange-50"
+      className="flex-3 md:flex-1 flex items-center justify-center border-amber-50 border-2 bg-orange-50"
     >
       <button
         type="submit"
