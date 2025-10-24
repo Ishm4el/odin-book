@@ -216,10 +216,7 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
   return (
     <>
       {loaderData.user && loaderData.postsToDisplay && (
-        <section>
-          <h3 className="p-1 h-fit break-words bg-gray-200/50 w-full text-center mb-10">
-            {JSON.stringify(loaderData.user)}
-          </h3>
+        <section className="w-full overflow-scroll">
           {loaderData.postsToDisplay &&
             loaderData.postsToDisplay.map((post) => (
               <PostCard loadedData={post} key={post.post.id} />
