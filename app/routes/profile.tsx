@@ -15,6 +15,10 @@ import { camelCaseToTitleCase } from "~/utility/utility";
 import { authenticate } from "~/services/authenticate";
 import { and, eq } from "drizzle-orm";
 
+import { type FileUpload, parseFormData } from "@remix-run/form-data-parser";
+
+import { fileStorage, getStorageKey } from "~/services/avatar-storage.server";
+
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
     { title: `Viewing User: ${loaderData ? loaderData.id : "ERROR"}` },
@@ -67,32 +71,27 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   throw data("User not found", { status: 404 });
 }
 
-function Descriptor({ title, info }: { title: string; info: string }) {
-  return (
-    <div className="flex gap-2">
-      <h2 className="font-medium text-orange-950">{title}: </h2>
-      <span>{info}</span>
-    </div>
-  );
-}
-
 export async function action({ request, params }: Route.ActionArgs) {
   const user = await authenticate(request);
   const otherUserId = params.profileId;
 
-  if (user.id === otherUserId)
-    throw data("You cannot follow yourself", { status: 409 });
+  const checkIfSameUser = () => {
+    if (user.id === otherUserId)
+      throw data("You cannot follow yourself", { status: 409 });
+  };
 
   const db = database();
 
   switch (request.method) {
     case "POST":
+      checkIfSameUser();
       await db
         .insert(schema.follows)
         .values({ followeeId: otherUserId, followerId: user.id });
       break;
 
     case "DELETE":
+      checkIfSameUser();
       await db
         .delete(schema.follows)
         .where(
@@ -102,7 +101,46 @@ export async function action({ request, params }: Route.ActionArgs) {
           )
         );
       break;
+    case "PATCH":
+      console.log("PATCHING");
+      async function uploadHandler(fileUpload: FileUpload) {
+        if (
+          fileUpload.fieldName === "avatar" &&
+          fileUpload.type.startsWith("image/")
+        ) {
+          console.log("file is uploading");
+          const storageKey = getStorageKey(user.id);
+          console.log(storageKey);
+          await fileStorage.set(storageKey, fileUpload);
+
+          const fileFromStorage = await fileStorage.get(storageKey);
+
+          if (fileFromStorage) console.log(fileFromStorage.name);
+        }
+      }
+
+      // let storage = new LocalFileStorage(".");
+
+      // let file = new File(["hello world"], "hello.txt", { type: "text/plain" });
+      // let key = "hello-key";
+
+      // Put the file in storage.
+      // await storage.set(key, file);
+
+      const formData = await parseFormData(request, uploadHandler);
+      const image = formData.get("avatar");
+
+      break;
   }
+}
+
+function Descriptor({ title, info }: { title: string; info: string }) {
+  return (
+    <div className="flex gap-2">
+      <h2 className="font-medium text-orange-950">{title}: </h2>
+      <span>{info}</span>
+    </div>
+  );
 }
 
 function RenderListItemUser({
@@ -121,6 +159,7 @@ function RenderListItemUser({
       onClick={() => {
         navigate(`/profile/${followerId}`);
       }}
+      key={`list-item-${followerId}`}
     >
       <div className="flex items-center p-1 gap-2">
         <img
@@ -153,7 +192,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
     <Descriptor
       title={camelCaseToTitleCase(entry[0])}
       info={entry[1]}
-      key={entry[0]}
+      key={`data-point-${entry[0]}`}
     />
   ));
 
@@ -162,43 +201,53 @@ export default function profile({ loaderData }: Route.ComponentProps) {
   ) : null;
 
   const userControlsRender = sameUser ? (
-    <div className="md:flex md:gap-3 w-full">
-      <div className="flex-1">
-        <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
-        <ul
-          className={`h-[40dvh] overflow-scroll outline ${followers.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
-        >
-          {followers.map((user) => (
-            <>
-              <RenderListItemUser
-                firstName={user.follower.firstName}
-                followerId={user.followerId}
-                lastName={user.follower.lastName}
-                profilePictureAddress={user.follower.profilePictureAddress}
-              />
-            </>
-          ))}
-        </ul>
-      </div>
+    <>
+      <Form method="PATCH" encType="multipart/form-data">
+        <input type="file" id="avatar" name="avatar" accept="image/*" />
+        <button className="hover:bg-amber-300 hover:cursor-pointer">
+          Update New Profile Picture
+        </button>
+      </Form>
+      <div className="md:flex md:gap-3 w-full">
+        <div className="flex-1">
+          <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
+          <ul
+            className={`h-[40dvh] overflow-scroll outline ${followers.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
+          >
+            {followers.map((user) => (
+              <>
+                <RenderListItemUser
+                  firstName={user.follower.firstName}
+                  followerId={user.followerId}
+                  lastName={user.follower.lastName}
+                  profilePictureAddress={user.follower.profilePictureAddress}
+                  key={`followers-${user.followerId}`}
+                />
+              </>
+            ))}
+          </ul>
+        </div>
 
-      <div className="flex-1">
-        <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
-        <ul
-          className={`h-[40dvh] overflow-scroll outline ${userFollows.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
-        >
-          {userFollows.map((user) => (
-            <>
-              <RenderListItemUser
-                firstName={user.followee.firstName}
-                followerId={user.followeeId}
-                lastName={user.followee.lastName}
-                profilePictureAddress={user.followee.profilePictureAddress}
-              />
-            </>
-          ))}
-        </ul>
+        <div className="flex-1">
+          <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
+          <ul
+            className={`h-[40dvh] overflow-scroll outline ${userFollows.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
+          >
+            {userFollows.map((user) => (
+              <>
+                <RenderListItemUser
+                  firstName={user.followee.firstName}
+                  followerId={user.followeeId}
+                  lastName={user.followee.lastName}
+                  profilePictureAddress={user.followee.profilePictureAddress}
+                  key={`user-follows-${user.followeeId}`}
+                />
+              </>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   ) : (
     <Form method={doesFollowDisplay ? "DELETE" : "POST"}>
       <button
