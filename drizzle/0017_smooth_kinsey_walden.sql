@@ -1,0 +1,1 @@
+ALTER TABLE "usersLikedComments" RENAME COLUMN "liked" TO "like";

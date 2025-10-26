@@ -169,7 +169,7 @@ export const usersLikedPostsRelations = relations(
 export const usersLikedComments = pgTable(
   "usersLikedComments",
   {
-    liked: boolean().default(false).notNull(),
+    like: boolean().default(false).notNull(),
 
     userId: uuid()
       .notNull()

@@ -7,6 +7,7 @@ import * as schema from "~/database/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { useEffect, useRef } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import LikeSomething from "~/components/LikeSomething";
 
 export function meta({ params }: Route.MetaArgs) {
   return [
@@ -190,6 +191,18 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
                   <h3>{comment.datePublished.toDateString()}</h3>
                 </div>
                 <div>{comment.text}</div>
+                <div id={`comment-controls-${comment.id}`}>
+                  <div
+                    id={`comment-like-button-${comment.id}`}
+                    className="[--base-size-h:calc(var(--text-base--line-height)*var(--text-base))] size-[var(--base-size-h)]"
+                  >
+                    <LikeSomething
+                      actionMatch={`/comment/like/`}
+                      loaderMatch="/comment/isLiked/"
+                      requestId={comment.id}
+                    />
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
