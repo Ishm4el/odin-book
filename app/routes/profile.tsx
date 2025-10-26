@@ -212,7 +212,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
         <div className="flex-1">
           <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
           <ul
-            className={`h-[40dvh] overflow-scroll outline ${followers.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
+            className={`h-[40dvh] overflow-y-scroll outline ${followers.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
           >
             {followers.map((user) => (
               <>
@@ -231,7 +231,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
         <div className="flex-1">
           <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
           <ul
-            className={`h-[40dvh] overflow-scroll outline ${userFollows.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
+            className={`h-[40dvh] overflow-y-scroll outline ${userFollows.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
           >
             {userFollows.map((user) => (
               <>

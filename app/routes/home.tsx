@@ -8,7 +8,7 @@ import { Form, NavLink, useFetcher, useNavigate } from "react-router";
 import { authenticate } from "~/services/authenticate";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import type { loader as loaderIsPostLiked } from "./isPostLiked";
+import type { loader as loaderIsPostLiked } from "../api/isPostLiked";
 import { and, asc, eq, exists, getTableColumns, sql } from "drizzle-orm";
 
 export function meta({}: Route.MetaArgs) {
@@ -216,7 +216,7 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
   return (
     <>
       {loaderData.user && loaderData.postsToDisplay && (
-        <section className="w-full overflow-scroll">
+        <section className="w-full overflow-y-scroll p-5">
           {loaderData.postsToDisplay &&
             loaderData.postsToDisplay.map((post) => (
               <PostCard loadedData={post} key={post.post.id} />

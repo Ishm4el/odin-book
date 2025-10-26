@@ -6,7 +6,7 @@ import { database } from "~/database/context";
 import * as schema from "~/database/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { useEffect, useRef } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 export function meta({ params }: Route.MetaArgs) {
   return [
@@ -119,7 +119,7 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
 
   if (loaderData.post)
     return (
-      <article className="h-full bg-amber-50/20 w-full flex flex-col justify-between overflow-y-scroll">
+      <article className="h-full bg-amber-50/20 w-full flex flex-col justify-between overflow-y-scroll p-5">
         <section id="post-content">
           <div id="post-header" className="bg-amber-100/99">
             <h1 className="text-4xl p-2">{loaderData.post.title}</h1>
@@ -194,6 +194,7 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
             ))}
           </ul>
         </section>
+        <ToastContainer />
       </article>
     );
   else return <article className="block">No post data was found..</article>;
