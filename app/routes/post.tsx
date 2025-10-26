@@ -134,11 +134,18 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
               {loaderData.post.authorId.firstName}
             </h2>
           </div>
-          <div
-            id="text-content"
-            className="bg-white border-amber-100 border p-4"
-          >
+          <div id="post-text" className="bg-white border-amber-100 border p-4">
             {loaderData.post.text}
+          </div>
+          <div
+            id={`comment-like-button-${loaderData.post.id}`}
+            className="[--base-size-h:calc(var(--text-base--line-height)*var(--text-base))] size-[var(--base-size-h)]"
+          >
+            <LikeSomething
+              actionMatch={`/post/like/`}
+              loaderMatch="/post/isLiked/"
+              requestId={loaderData.post.id}
+            />
           </div>
         </section>
 
@@ -169,7 +176,7 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
             </button>
           </Form>
 
-          <ul>
+          <ul id="post-comment-section">
             {loaderData.post.comments.map((comment) => (
               <li className="mb-1 p-1 shadow" key={comment.id}>
                 <div className="flex gap-2 bg-amber-50/90">
