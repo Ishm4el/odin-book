@@ -13,11 +13,11 @@ export default [
     route("/logout", "routes/logout.tsx"),
     layout("./layouts/ProtectedLayout.tsx", [
       route("/createPost", "routes/createPost.tsx"),
-      route("/post/like/:postId", "routes/likePost.tsx"),
-      route("/post/isLiked/:postId", "routes/isPostLiked.tsx"),
+      route("/post/like/:postId", "api/likePost.tsx"),
+      route("/post/isLiked/:postId", "api/isPostLiked.tsx"),
       route("/post/:postId", "routes/post.tsx"),
-      route("/comment/like/:commentId", "routes/likeComment.tsx"),
-      route("/comment/isLiked/:commentId", "routes/isCommentLiked.tsx"),
+      route("/comment/like/:commentId", "api/likeComment.tsx"),
+      route("/comment/isLiked/:commentId", "api/isCommentLiked.tsx"),
       route("/comments/:postId", "routes/comments.tsx"),
       route("/profile/:profileId", "routes/profile.tsx", [
         route("avatar", "api/avatar.tsx"),
