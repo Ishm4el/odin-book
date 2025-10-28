@@ -5,12 +5,14 @@ interface LikeSomething {
   requestId: string;
   actionMatch: string;
   loaderMatch: string;
+  className?: string;
 }
 
 export default function LikeSomething({
   requestId,
   actionMatch,
   loaderMatch,
+  className,
 }: LikeSomething) {
   const fetcher = useFetcher();
 
@@ -28,7 +30,7 @@ export default function LikeSomething({
     >
       <button
         type="submit"
-        className="hover:cursor-pointer w-full"
+        className={`w-full hover:cursor-pointer ${className}`}
         name="shouldLike"
         value={fetcherLoader.data?.like ? "false" : "true"}
       >
