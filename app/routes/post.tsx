@@ -8,6 +8,7 @@ import { and, eq, sql } from "drizzle-orm";
 import { useEffect, useRef } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import LikeSomething from "~/components/LikeSomething";
+import UserProfilePicture from "~/components/UserProfilePicture";
 
 export function meta({ params }: Route.MetaArgs) {
   return [
@@ -34,9 +35,9 @@ export async function loader({ request, params }: Route.LoaderArgs) {
                 eq(schema.usersLikedPosts.postId, postId),
                 and(
                   eq(schema.usersLikedPosts.userId, user.id),
-                  eq(schema.usersLikedPosts.like, true)
-                )
-              )
+                  eq(schema.usersLikedPosts.like, true),
+                ),
+              ),
             )}))`,
         })
         .from(schema.usersLikedPosts)
@@ -120,26 +121,32 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
 
   if (loaderData.post)
     return (
-      <article className="h-full bg-amber-50/20 w-full flex flex-col justify-between overflow-y-scroll p-5">
+      <article className="flex h-full w-full flex-col justify-between overflow-y-scroll bg-amber-50/20 p-5">
         <section id="post-content">
           <div id="post-header" className="bg-amber-100/99">
-            <h1 className="text-4xl p-2">{loaderData.post.title}</h1>
-            <h2
-              className="p-2 text-xl hover:text-amber-900 w-fit hover:cursor-pointer active:text-amber-500"
-              onClick={() => {
-                navigate(`/profile/${loaderData.post?.authorId.id}`);
-              }}
-            >
-              {loaderData.post.authorId.lastName},{" "}
-              {loaderData.post.authorId.firstName}
-            </h2>
+            <h1 className="p-2 text-4xl">{loaderData.post.title}</h1>
+            <div id="post-header-author-section" className="flex gap-2 p-2">
+              <h2
+                className="w-fit text-xl hover:cursor-pointer hover:text-amber-900 active:text-amber-500"
+                onClick={() => {
+                  navigate(`/profile/${loaderData.post?.authorId.id}`);
+                }}
+              >
+                {loaderData.post.authorId.lastName},{" "}
+                {loaderData.post.authorId.firstName}
+              </h2>
+              <UserProfilePicture
+                src={loaderData.post.authorId.profilePictureAddress}
+                textSize={"xl"}
+              />
+            </div>
           </div>
-          <div id="post-text" className="bg-white border-amber-100 border p-4">
+          <div id="post-text" className="border border-amber-100 bg-white p-4">
             {loaderData.post.text}
           </div>
           <div
             id={`comment-like-button-${loaderData.post.id}`}
-            className="[--base-size-h:calc(var(--text-base--line-height)*var(--text-base))] size-[var(--base-size-h)]"
+            className="size-[var(--base-size-h)] [--base-size-h:calc(var(--text-base--line-height)*var(--text-base))]"
           >
             <LikeSomething
               actionMatch={`/post/like/`}
@@ -152,25 +159,25 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
         <section id="post-comments" className="bg-white">
           <Form
             method="post"
-            className="shadow mb-3 p-1 flex flex-col gap-3"
+            className="mb-3 flex flex-col gap-3 p-1 shadow"
             ref={refForm}
           >
             <div className="flex flex-col">
               <label
                 htmlFor="newComment"
-                className="text-center mb-1 underline"
+                className="mb-1 text-center underline"
               >
                 Comment?
               </label>
               <textarea
                 name="newComment"
                 id="newComment"
-                className="ring mx-3"
+                className="mx-3 ring"
               ></textarea>
             </div>
             <button
               type="submit"
-              className="border rounded mb-1 w-1/2 self-center hover:cursor-pointer bg-orange-50 hover:bg-orange-100 focus:bg-orange-100"
+              className="mb-1 w-1/2 self-center rounded border bg-orange-50 hover:cursor-pointer hover:bg-orange-100 focus:bg-orange-100"
             >
               Post Comment
             </button>
@@ -186,13 +193,13 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
                       navigate(`/profile/${comment.authorId.id}`);
                     }}
                   >
-                    <h2 className="hover:text-amber-900 w-fit hover:cursor-pointer active:text-amber-500">
+                    <h2 className="w-fit hover:cursor-pointer hover:text-amber-900 active:text-amber-500">
                       {comment.authorId.firstName} {comment.authorId.lastName}
                     </h2>
                     <img
                       src={comment.authorId.profilePictureAddress}
                       alt=""
-                      className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 size-[calc(var(--text-base--line-height)*var(--text-base))]"
+                      className="inline size-[calc(var(--text-base--line-height)*var(--text-base))] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
                     />
                   </div>
                   <h3>{comment.datePublished.toDateString()}</h3>
@@ -201,7 +208,7 @@ export default function post({ loaderData, actionData }: Route.ComponentProps) {
                 <div id={`comment-controls-${comment.id}`}>
                   <div
                     id={`comment-like-button-${comment.id}`}
-                    className="[--base-size-h:calc(var(--text-base--line-height)*var(--text-base))] size-[var(--base-size-h)]"
+                    className="size-[var(--base-size-h)] [--base-size-h:calc(var(--text-base--line-height)*var(--text-base))]"
                   >
                     <LikeSomething
                       actionMatch={`/comment/like/`}
