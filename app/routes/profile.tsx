@@ -1,10 +1,4 @@
-import {
-  data,
-  Form,
-  isRouteErrorResponse,
-  useNavigate,
-  useRouteError,
-} from "react-router";
+import { data, isRouteErrorResponse, useRouteError } from "react-router";
 
 import type { Route } from "./+types/profile";
 
@@ -18,6 +12,8 @@ import { and, eq } from "drizzle-orm";
 import { type FileUpload, parseFormData } from "@remix-run/form-data-parser";
 
 import { fileStorage, getStorageKey } from "~/services/avatar-storage.server";
+import ProfileCurrentUser from "./profileComponents/ProfileCurrentUser";
+import ProfileOtherUser from "./profileComponents/ProfileOtherUser";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
@@ -97,8 +93,8 @@ export async function action({ request, params }: Route.ActionArgs) {
         .where(
           and(
             eq(schema.follows.followeeId, otherUserId),
-            eq(schema.follows.followerId, user.id)
-          )
+            eq(schema.follows.followerId, user.id),
+          ),
         );
       break;
     case "PATCH":
@@ -128,7 +124,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       // await storage.set(key, file);
 
       const formData = await parseFormData(request, uploadHandler);
-      const image = formData.get("avatar");
+      // const image = formData.get("avatar");
 
       break;
   }
@@ -143,39 +139,7 @@ function Descriptor({ title, info }: { title: string; info: string }) {
   );
 }
 
-function RenderListItemUser({
-  followerId,
-  profilePictureAddress,
-  firstName,
-  lastName,
-}: {
-  [key: string]: string;
-}) {
-  const navigate = useNavigate();
-
-  return (
-    <li
-      className="outline text-xl p-0.5 bg-slate-50 hover:bg-white active:bg-amber-100 hover:cursor-pointer"
-      onClick={() => {
-        navigate(`/profile/${followerId}`);
-      }}
-      key={`list-item-${followerId}`}
-    >
-      <div className="flex items-center p-1 gap-2">
-        <img
-          src={profilePictureAddress}
-          className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 size-[calc(var(--text-xl--line-height)*var(--text-xl))]"
-        />
-        <h4>
-          {firstName} {lastName}
-        </h4>
-      </div>
-    </li>
-  );
-}
-
 export default function profile({ loaderData }: Route.ComponentProps) {
-  const navigate = useNavigate();
   const {
     id,
     profilePictureAddress,
@@ -188,86 +152,11 @@ export default function profile({ loaderData }: Route.ComponentProps) {
   } = loaderData;
   const entries = Object.entries(toDisplay);
 
-  const descriptors = entries.map((entry) => (
-    <Descriptor
-      title={camelCaseToTitleCase(entry[0])}
-      info={entry[1]}
-      key={`data-point-${entry[0]}`}
-    />
-  ));
-
-  const doesFollowDisplay = doesCurrentUserFollow ? (
-    <div>{JSON.stringify(doesCurrentUserFollow, null, 2)}</div>
-  ) : null;
-
-  const userControlsRender = sameUser ? (
-    <>
-      <Form method="PATCH" encType="multipart/form-data">
-        <input type="file" id="avatar" name="avatar" accept="image/*" />
-        <button className="hover:bg-amber-300 hover:cursor-pointer">
-          Update New Profile Picture
-        </button>
-      </Form>
-      <div className="md:flex md:gap-3 w-full">
-        <div className="flex-1">
-          <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
-          <ul
-            className={`h-[40dvh] overflow-y-scroll outline ${followers.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
-          >
-            {followers.map((user) => (
-              <>
-                <RenderListItemUser
-                  firstName={user.follower.firstName}
-                  followerId={user.followerId}
-                  lastName={user.follower.lastName}
-                  profilePictureAddress={user.follower.profilePictureAddress}
-                  key={`followers-${user.followerId}`}
-                />
-              </>
-            ))}
-          </ul>
-        </div>
-
-        <div className="flex-1">
-          <h3 className="text-2xl text-rose-900">{"Followers"}</h3>
-          <ul
-            className={`h-[40dvh] overflow-y-scroll outline ${userFollows.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
-          >
-            {userFollows.map((user) => (
-              <>
-                <RenderListItemUser
-                  firstName={user.followee.firstName}
-                  followerId={user.followeeId}
-                  lastName={user.followee.lastName}
-                  profilePictureAddress={user.followee.profilePictureAddress}
-                  key={`user-follows-${user.followeeId}`}
-                />
-              </>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </>
-  ) : (
-    <Form method={doesFollowDisplay ? "DELETE" : "POST"}>
-      <button
-        name="userId"
-        className={
-          doesFollowDisplay
-            ? "border rounded hover:cursor-pointer bg-linear-to-bl from-red-100 to-rose-200 hover:bg-linear-to-br hover:from-red-50 hover:to-rose-100 p-1 active:from-red-400 active:to-rose-400"
-            : "border rounded hover:cursor-pointer bg-linear-to-bl from-amber-100 to-orange-200 hover:bg-linear-to-br hover:from-amber-50 hover:to-orange-100 p-1 active:from-amber-400 active:to-orange-400"
-        }
-      >
-        {doesFollowDisplay ? "Unfollow" : "Follow"}
-      </button>
-    </Form>
-  );
-
   return (
-    <article className="bg-white w-full">
+    <article className="w-full p-5">
       <section
         id="other-user-header"
-        className="items-center text-4xl w-full flex gap-2 bg-amber-50 p-2 font-semibold"
+        className="flex w-full items-center gap-2 bg-amber-50 p-2 text-4xl font-semibold"
       >
         <h1>
           {loaderData.firstName} {loaderData.lastName}
@@ -275,14 +164,20 @@ export default function profile({ loaderData }: Route.ComponentProps) {
         <img
           src={loaderData.profilePictureAddress}
           alt=""
-          className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 size-[40px]"
+          className="inline size-[40px] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
         />
       </section>
-      <section id="other-user-info" className="p-2 text-lg">
-        {descriptors}
+      <section id="other-user-info" className="bg-white p-2 text-lg">
+        {entries.map((entry) => (
+          <Descriptor
+            title={camelCaseToTitleCase(entry[0])}
+            info={entry[1]}
+            key={`data-point-${entry[0]}`}
+          />
+        ))}
       </section>
       <section id="user-controls" className="bg-white p-2">
-        {userControlsRender}
+        {sameUser ? <ProfileCurrentUser /> : <ProfileOtherUser />}
       </section>
     </article>
   );
@@ -297,7 +192,7 @@ export function ErrorBoundary() {
   if (isRouteErrorResponse(error)) {
     return (
       <div className={containerClass}>
-        <h1 className="font-bold text-2xl">
+        <h1 className="text-2xl font-bold">
           {error.status} {error.statusText}
         </h1>
         <p>{error.data}</p>
