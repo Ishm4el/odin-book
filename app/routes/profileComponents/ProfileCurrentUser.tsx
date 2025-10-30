@@ -44,7 +44,7 @@ function UserSearch({
         <input
           type="search"
           placeholder="Search Following"
-          className="my-1 border"
+          className="my-1 border p-1"
           onInput={(e) => setInput(e.currentTarget.value)}
         />
       </form>
