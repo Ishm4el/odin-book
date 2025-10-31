@@ -192,9 +192,14 @@ export default function profile({ loaderData }: Route.ComponentProps) {
       </section>
       <section id="user-posts" className="bg-white p-2 text-lg">
         <SectionTitle title="Posts" />
-        <ul className="border">
+        <ul
+          className={`h-fit max-h-[50dvh] border ${posts.length === 0 ? "bg-gray-100" : "bg-sky-200"}`}
+        >
           {posts.map((post) => (
-            <ListItemNavigation onClickLink={`/post/${post.id}`}>
+            <ListItemNavigation
+              onClickLink={`/post/${post.id}`}
+              key={`post-${post.id}`}
+            >
               <h4>{post.title}</h4>
               <span>-</span>
               <time dateTime={post.datePublished.toString()}>
@@ -204,6 +209,29 @@ export default function profile({ loaderData }: Route.ComponentProps) {
               </time>
             </ListItemNavigation>
           ))}
+          {posts.length <= 0 && <span className="p-1">No posts yet!</span>}
+        </ul>
+      </section>
+      <section id="user-comments" className="bg-white p-2 text-lg">
+        <SectionTitle title="Comments" />
+        <ul
+          className={`h-fit max-h-[50dvh] border ${comments.length === 0 ? "bg-gray-200" : "bg-sky-50"}`}
+        >
+          {comments.map((comment) => (
+            <ListItemNavigation
+              onClickLink={`/post/${comment.postId.id}`}
+              key={`comment-${comment.id}`}
+            >
+              <h5>{comment.text}</h5>
+              <span>-</span>
+              <time dateTime={comment.datePublished.toString()}>
+                {comment.datePublished.toLocaleString(navigator.language)}
+              </time>
+            </ListItemNavigation>
+          ))}
+          {comments.length <= 0 && (
+            <span className="p-1">No comments yet!</span>
+          )}
         </ul>
       </section>
     </article>
