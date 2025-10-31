@@ -20,6 +20,7 @@ import { fileStorage, getStorageKey } from "~/services/avatar-storage.server";
 import ProfileCurrentUser from "./profileComponents/ProfileCurrentUser";
 import ProfileOtherUser from "./profileComponents/ProfileOtherUser";
 import SectionTitle from "./profileComponents/SectionTitle";
+import ListItemNavigation from "./profileComponents/ListItemNavigation";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
@@ -193,9 +194,15 @@ export default function profile({ loaderData }: Route.ComponentProps) {
         <SectionTitle title="Posts" />
         <ul className="border">
           {posts.map((post) => (
-            <li key={post.id} className="text-xl p-2 ">
-              <NavLink to={`/post/${post.id}`}>{post.title}</NavLink>
-            </li>
+            <ListItemNavigation onClickLink={`/post/${post.id}`}>
+              <h4>{post.title}</h4>
+              <span>-</span>
+              <time dateTime={post.datePublished.toString()}>
+                {post.datePublished.toLocaleString(navigator.language, {
+                  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                })}
+              </time>
+            </ListItemNavigation>
           ))}
         </ul>
       </section>
