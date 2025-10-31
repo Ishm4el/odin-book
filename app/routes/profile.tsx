@@ -1,4 +1,9 @@
-import { data, isRouteErrorResponse, useRouteError } from "react-router";
+import {
+  data,
+  isRouteErrorResponse,
+  NavLink,
+  useRouteError,
+} from "react-router";
 
 import type { Route } from "./+types/profile";
 
@@ -14,6 +19,7 @@ import { type FileUpload, parseFormData } from "@remix-run/form-data-parser";
 import { fileStorage, getStorageKey } from "~/services/avatar-storage.server";
 import ProfileCurrentUser from "./profileComponents/ProfileCurrentUser";
 import ProfileOtherUser from "./profileComponents/ProfileOtherUser";
+import SectionTitle from "./profileComponents/SectionTitle";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
@@ -39,6 +45,8 @@ export async function loader({ params, request }: Route.LoaderArgs) {
           },
         },
       },
+      posts: true,
+      comments: { with: { postId: true } },
     },
   });
 
@@ -148,6 +156,8 @@ export default function profile({ loaderData }: Route.ComponentProps) {
     created,
     doesCurrentUserFollow,
     sameUser,
+    comments,
+    posts,
     ...toDisplay
   } = loaderData;
   const entries = Object.entries(toDisplay);
@@ -178,6 +188,16 @@ export default function profile({ loaderData }: Route.ComponentProps) {
       </section>
       <section id="user-controls" className="bg-white p-2">
         {sameUser ? <ProfileCurrentUser /> : <ProfileOtherUser />}
+      </section>
+      <section id="user-posts" className="bg-white p-2 text-lg">
+        <SectionTitle title="Posts" />
+        <ul className="border">
+          {posts.map((post) => (
+            <li key={post.id} className="text-xl p-2 ">
+              <NavLink to={`/post/${post.id}`}>{post.title}</NavLink>
+            </li>
+          ))}
+        </ul>
       </section>
     </article>
   );

@@ -2,37 +2,19 @@ import { Form, useLoaderData, useNavigate } from "react-router";
 import type { loader } from "../profile";
 import { useState } from "react";
 import SearchForm from "~/components/SearchForm";
+import SectionTitle from "./SectionTitle";
+import ListItemNavigation from "./ListItemNavigation";
+import UserProfilePicture from "~/components/UserProfilePicture";
 
 type LoaderData = Awaited<ReturnType<typeof loader>>;
 type FollowersFollowingRow = Pick<LoaderData, "followers" | "userFollows">;
 type UserInfo = LoaderData["userFollows"][number]["followee"];
 
-function RenderListItemUser(user: UserInfo) {
-  const navigate = useNavigate();
-  return (
-    <li
-      className="bg-slate-50 p-0.5 text-xl outline hover:cursor-pointer hover:bg-white active:bg-amber-100"
-      onClick={() => {
-        navigate(`/profile/${user.id}`);
-      }}
-      key={`list-item-${user.id}`}
-    >
-      <div className="flex items-center gap-2 p-1">
-        <img
-          src={user.profilePictureAddress}
-          className="inline size-[calc(var(--text-xl--line-height)*var(--text-xl))] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
-        />
-        <h4>{`${user.firstName} ${user.lastName}`}</h4>
-      </div>
-    </li>
-  );
-}
-
 function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
   const [followersInput, setFollowersInput] = useState<string>("");
   return (
     <div className="flex-1">
-      <h3 className="text-2xl text-rose-900">{title}</h3>
+      <SectionTitle title={title} />
       <SearchForm setInput={setFollowersInput} />
       <ul
         className={`h-[50dvh] overflow-y-scroll border ${users.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
@@ -46,24 +28,16 @@ function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
                 else false;
               })
               .map((user) => (
-                <RenderListItemUser
-                  firstName={user.firstName}
-                  id={user.id}
-                  lastName={user.lastName}
-                  profilePictureAddress={user.profilePictureAddress}
-                  key={`followers-${user.id}`}
-                  created={user.created}
-                />
+                <ListItemNavigation onClickLink={`/user/${user.id}`}>
+                  <UserProfilePicture src={user.profilePictureAddress} />
+                  <h4>{`${user.firstName} ${user.lastName}`}</h4>
+                </ListItemNavigation>
               ))
           : users.map((user) => (
-              <RenderListItemUser
-                firstName={user.firstName}
-                id={user.id}
-                lastName={user.lastName}
-                profilePictureAddress={user.profilePictureAddress}
-                key={`followers-${user.id}`}
-                created={user.created}
-              />
+              <ListItemNavigation onClickLink={`/user/${user.id}`}>
+                <UserProfilePicture src={user.profilePictureAddress} />
+                <h4>{`${user.firstName} ${user.lastName}`}</h4>
+              </ListItemNavigation>
             ))}
       </ul>
     </div>
