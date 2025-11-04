@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import type { loader as loaderIsPostLiked } from "../api/isPostLiked";
 import { and, asc, eq, exists, getTableColumns, sql } from "drizzle-orm";
+import UnauthorizedUserHomePage from "./homeComponents/UnauthorizedUserHomePage";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -20,7 +21,7 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   const session = await sessionStorage.getSession(
-    request.headers.get("cookie")
+    request.headers.get("cookie"),
   );
   const user = session.get("user");
 
@@ -34,9 +35,9 @@ export async function loader({ context, request }: Route.LoaderArgs) {
           .where(
             and(
               eq(schema.usersLikedPosts.postId, schema.posts.id),
-              eq(schema.usersLikedPosts.userId, user.id)
-            )
-          )
+              eq(schema.usersLikedPosts.userId, user.id),
+            ),
+          ),
       );
 
       const { password, created, email, birthdate, ...restOfUser } =
@@ -53,9 +54,9 @@ export async function loader({ context, request }: Route.LoaderArgs) {
                 eq(schema.usersLikedPosts.postId, schema.posts.id),
                 and(
                   eq(schema.usersLikedPosts.userId, user.id),
-                  eq(schema.usersLikedPosts.like, true)
-                )
-              )
+                  eq(schema.usersLikedPosts.like, true),
+                ),
+              ),
             )}))`,
           user: { ...restOfUser },
         })
@@ -117,11 +118,11 @@ function LikePost({ postId }: { postId: string }) {
     <fetcher.Form
       method="post"
       action={`/post/like/${postId}`}
-      className="flex-3 md:flex-1 flex items-center justify-center border-amber-50 border-2 bg-orange-50"
+      className="flex flex-3 items-center justify-center border-2 border-amber-50 bg-orange-50 md:flex-1"
     >
       <button
         type="submit"
-        className="hover:cursor-pointer w-full"
+        className="w-full hover:cursor-pointer"
         name="shouldLike"
         value={fetcherLoader.data?.like ? "false" : "true"}
       >
@@ -156,11 +157,11 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
   const navigate = useNavigate();
   return (
     <div className="flex">
-      <div className="flex flex-col bg-amber-50 p-2 flex-20">
-        <div className="flex items-end gap-5 flex-wrap">
+      <div className="flex flex-20 flex-col bg-amber-50 p-2">
+        <div className="flex flex-wrap items-end gap-5">
           <NavLink
             to={`/post/${loadedData.post.id}`}
-            className="text-3xl text-shadow-amber-500 hover:underline hover:text-amber-900"
+            className="text-3xl text-shadow-amber-500 hover:text-amber-900 hover:underline"
           >
             {loadedData.post.title}
           </NavLink>
@@ -170,13 +171,13 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
               navigate(`/profile/${loadedData.post.authorId}`);
             }}
           >
-            <h2 className="text-xl hover:text-amber-900 w-fit hover:cursor-pointer active:text-amber-500">
+            <h2 className="w-fit text-xl hover:cursor-pointer hover:text-amber-900 active:text-amber-500">
               {loadedData.user?.firstName} {loadedData.user?.lastName}
             </h2>
             <img
               src={`http://localhost:3000${loadedData.user?.profilePictureAddress}`}
               alt=""
-              className="inline object-cover rounded-full border border-amber-300 hover:cursor-pointer hover:border-amber-500 size-[calc(var(--text-xl--line-height)*var(--text-xl))]"
+              className="inline size-[calc(var(--text-xl--line-height)*var(--text-xl))] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
             />
           </div>
         </div>
@@ -195,9 +196,9 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
 
 function PostCard({ loadedData }: { loadedData: loadedData }) {
   return (
-    <article className="bg-white mb-6 shadow-xl">
+    <article className="mb-6 bg-white shadow-xl">
       <PostHeader loadedData={loadedData} />
-      <span className="p-5 block">{loadedData.post.text}</span>
+      <span className="block p-5">{loadedData.post.text}</span>
       {/* <PostCommentForm post={post} />
       <CommentList post={post} /> */}
     </article>
@@ -224,14 +225,9 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
         </section>
       )}
       {!loaderData.user && (
-        <>
-          <h1 className="text-7xl text-amber-300 bg-amber-50/60 w-full text-center p-10 text-shadow-lg">
-            Welcome to the homepage!
-          </h1>
-          <h2 className="text-5xl bg-white/50 w-full text-center">
-            A Brief Message From The Server: {loaderData.message}
-          </h2>
-        </>
+        <UnauthorizedUserHomePage
+          message={loaderData.message ?? "There wasn't a message"}
+        />
       )}
       <ToastContainer />
     </>
