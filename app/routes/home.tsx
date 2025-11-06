@@ -11,6 +11,8 @@ import { toast, ToastContainer } from "react-toastify";
 import type { loader as loaderIsPostLiked } from "../api/isPostLiked";
 import { and, asc, eq, exists, getTableColumns, sql } from "drizzle-orm";
 import UnauthorizedUserHomePage from "./homeComponents/UnauthorizedUserHomePage";
+import LikeSomething from "~/components/LikeSomething";
+import { PostCard } from "./homeComponents/HomePostCard";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -99,110 +101,6 @@ export async function action({ request }: Route.ActionArgs) {
   } catch (error) {
     throw new Error(JSON.stringify(error));
   }
-}
-
-function LikePost({ postId }: { postId: string }) {
-  const fetcher = useFetcher<{
-    postId: string;
-    like: boolean;
-    userId: string;
-  }>();
-
-  const fetcherLoader = useFetcher<typeof loaderIsPostLiked>();
-
-  useEffect(() => {
-    fetcherLoader.load("post/isLiked/" + postId);
-  }, []);
-
-  return (
-    <fetcher.Form
-      method="post"
-      action={`/post/like/${postId}`}
-      className="flex flex-3 items-center justify-center border-2 border-amber-50 bg-orange-50 md:flex-1"
-    >
-      <button
-        type="submit"
-        className="w-full hover:cursor-pointer"
-        name="shouldLike"
-        value={fetcherLoader.data?.like ? "false" : "true"}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className={
-            fetcherLoader.data?.like
-              ? "fill-amber-500 hover:fill-amber-100"
-              : "hover:fill-amber-400"
-          }
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-          />
-        </svg>
-      </button>
-    </fetcher.Form>
-  );
-}
-
-type loadedData = Required<
-  Pick<Awaited<ReturnType<typeof loader>>, "postsToDisplay">
->["postsToDisplay"][number];
-
-function PostHeader({ loadedData }: { loadedData: loadedData }) {
-  const navigate = useNavigate();
-  return (
-    <div className="flex">
-      <div className="flex flex-20 flex-col bg-amber-50 p-2">
-        <div className="flex flex-wrap items-end gap-5">
-          <NavLink
-            to={`/post/${loadedData.post.id}`}
-            className="text-3xl text-shadow-amber-500 hover:text-amber-900 hover:underline"
-          >
-            {loadedData.post.title}
-          </NavLink>
-          <div
-            className="flex gap-1"
-            onClick={() => {
-              navigate(`/profile/${loadedData.post.authorId}`);
-            }}
-          >
-            <h2 className="w-fit text-xl hover:cursor-pointer hover:text-amber-900 active:text-amber-500">
-              {loadedData.user?.firstName} {loadedData.user?.lastName}
-            </h2>
-            <img
-              src={`http://localhost:3000${loadedData.user?.profilePictureAddress}`}
-              alt=""
-              className="inline size-[calc(var(--text-xl--line-height)*var(--text-xl))] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
-            />
-          </div>
-        </div>
-        <h3 className="text-sm">
-          {`${loadedData.post.datePublished.toString()}`}{" "}
-          {loadedData.post.datePublished.toString() !==
-          loadedData.post.dateUpdated.toString()
-            ? loadedData.post.dateUpdated.toString()
-            : null}
-        </h3>
-      </div>
-      <LikePost postId={loadedData.post.id} />
-    </div>
-  );
-}
-
-function PostCard({ loadedData }: { loadedData: loadedData }) {
-  return (
-    <article className="mb-6 bg-white shadow-xl">
-      <PostHeader loadedData={loadedData} />
-      <span className="block p-5">{loadedData.post.text}</span>
-      {/* <PostCommentForm post={post} />
-      <CommentList post={post} /> */}
-    </article>
-  );
 }
 
 export default function Home({ actionData, loaderData }: Route.ComponentProps) {
