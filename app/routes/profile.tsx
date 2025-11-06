@@ -164,7 +164,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
   const entries = Object.entries(toDisplay);
 
   return (
-    <article className="w-full p-5">
+    <article className="w-full p-5 overflow-y-scroll">
       <section
         id="other-user-header"
         className="flex w-full items-center gap-2 bg-amber-50 p-2 text-4xl font-semibold"
@@ -193,7 +193,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
       <section id="user-posts" className="bg-white p-2 text-lg">
         <SectionTitle title="Posts" />
         <ul
-          className={`h-fit max-h-[50dvh] border ${posts.length === 0 ? "bg-gray-100" : "bg-sky-200"}`}
+          className={`h-fit max-h-[50dvh] border ${posts.length === 0 ? "bg-gray-100" : "bg-sky-200"} overflow-y-scroll`}
         >
           {posts.map((post) => (
             <ListItemNavigation
@@ -215,7 +215,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
       <section id="user-comments" className="bg-white p-2 text-lg">
         <SectionTitle title="Comments" />
         <ul
-          className={`h-fit max-h-[50dvh] border ${comments.length === 0 ? "bg-gray-200" : "bg-sky-50"}`}
+          className={`h-fit max-h-[50dvh] border ${comments.length === 0 ? "bg-gray-200" : "bg-sky-50"} overflow-y-scroll`}
         >
           {comments.map((comment) => (
             <ListItemNavigation

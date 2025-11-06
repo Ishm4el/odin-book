@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useFetcher } from "react-router";
+import { type loader as isPostLikedLoader } from "~/api/isPostLiked";
+import {type loader as isCommentLikedLoader} from "~/api/isCommentLiked"
 
 interface LikeSomething {
   requestId: string;
@@ -16,7 +18,7 @@ export default function LikeSomething({
 }: LikeSomething) {
   const fetcher = useFetcher();
 
-  const fetcherLoader = useFetcher<{ like: boolean }>();
+  const fetcherLoader = useFetcher<typeof isPostLikedLoader | typeof isCommentLikedLoader>();
 
   useEffect(() => {
     fetcherLoader.load(loaderMatch + requestId);
