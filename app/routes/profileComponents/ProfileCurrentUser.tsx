@@ -14,7 +14,7 @@ function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
   const [followersInput, setFollowersInput] = useState<string>("");
   return (
     <div className="flex-1">
-      <div className="flex items-center gap-2">
+       <div className="flex items-center gap-2">
         <SectionTitle title={title} />
         <SearchForm setInput={setFollowersInput} />
       </div>
@@ -85,7 +85,7 @@ export default function ProfileCurrentUser() {
           accept="image/*"
           className="text-sm text-gray-700 file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:cursor-pointer hover:file:bg-violet-100"
         />
-        <button className="focus:ring-opacity-75 transform rounded-full bg-gradient-to-r from-amber-500 to-sky-500 px-8 py-3 font-bold text-white transition-all duration-300 ease-in-out hover:scale-105 hover:cursor-pointer hover:from-amber-600 hover:to-sky-600 hover:shadow-lg focus:ring-2 focus:ring-purple-400 focus:outline-none">
+        <button className="focus:ring-opacity-75 transform rounded-full bg-gradient-to-r from-amber-500 to-sky-500 px-4 py-2 font-bold text-white transition-all duration-300 ease-in-out hover:scale-105 hover:cursor-pointer hover:from-amber-600 hover:to-sky-600 hover:shadow-lg focus:ring-2 focus:ring-purple-400 focus:outline-none">
           Update New Profile Picture
         </button>
       </Form>
