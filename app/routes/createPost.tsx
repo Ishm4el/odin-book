@@ -46,49 +46,51 @@ export default function Component({ actionData }: Route.ComponentProps) {
           toastId: "PostPublishOutSuccess",
           ariaLabel: "Post uploaded!",
           onClose: () => {},
-        }
+        },
       );
     }
   }, [actionData]);
 
   return (
-    <Form className="w-full md:w-9/10 bg-amber-50/90" method="post" ref={formRef}>
-      <h1 className="text-5xl p-5 text-center">Create a new post</h1>
-      <div className="flex items-center justify-center flex-col">
-        <label
-          htmlFor="postTitle"
-          className="block text-gray-700 text-sm font-bold mb-2"
-        >
-          Post Title:
-        </label>
-        <input
-          type="text"
-          name="postTitle"
-          id="postTitle"
-          className={`shadow appearance-none border border-gray-200 rounded w-9/10  py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white text-center mb-4`}
-        />
-      </div>
-      <div className="flex items-center justify-center flex-col mb-5">
-        <label
-          htmlFor="postContent"
-          className="block text-gray-700 text-sm font-bold mb-2"
-        >
-          Post Title:
-        </label>
-        <textarea
-          name="postContent"
-          id="postContet"
-          className="w-9/10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white py-2 px-3"
-        />
-      </div>
-      <div className="flex items-center justify-center flex-col mb-6">
-        <button
-          type="submit"
-          className="bg-blue-500 focus:bg-blue-700 transition-colors hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
-        >
-          Post
-        </button>
-      </div>
-    </Form>
+    <section className="w-full p-5">
+      <Form className="bg-amber-50/90" method="post" ref={formRef}>
+        <h1 className="p-5 text-center text-5xl">Create a new post</h1>
+        <div className="flex flex-col items-center justify-center">
+          <label
+            htmlFor="postTitle"
+            className="mb-2 block text-sm font-bold text-gray-700"
+          >
+            Post Title:
+          </label>
+          <input
+            type="text"
+            name="postTitle"
+            id="postTitle"
+            className={`focus:shadow-outline mb-4 w-9/10 appearance-none rounded border border-gray-200 bg-white px-3 py-2 text-center leading-tight text-gray-700 shadow focus:outline-none`}
+          />
+        </div>
+        <div className="mb-5 flex flex-col items-center justify-center">
+          <label
+            htmlFor="postContent"
+            className="mb-2 block text-sm font-bold text-gray-700"
+          >
+            Post Content:
+          </label>
+          <textarea
+            name="postContent"
+            id="postContet"
+            className="not-first h-[60vh] w-9/10 rounded-md border border-gray-300 bg-white px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
+        <div className="mb-6 flex flex-col items-center justify-center">
+          <button
+            type="submit"
+            className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white transition-colors hover:cursor-pointer hover:bg-blue-700 focus:bg-blue-700 focus:outline-none"
+          >
+            Post
+          </button>
+        </div>
+      </Form>
+    </section>
   );
 }
