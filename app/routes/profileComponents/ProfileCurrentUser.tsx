@@ -14,8 +14,10 @@ function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
   const [followersInput, setFollowersInput] = useState<string>("");
   return (
     <div className="flex-1">
-      <SectionTitle title={title} />
-      <SearchForm setInput={setFollowersInput} />
+      <div className="flex items-center gap-2">
+        <SectionTitle title={title} />
+        <SearchForm setInput={setFollowersInput} />
+      </div>
       <ul
         className={`h-[50dvh] overflow-y-scroll border ${users.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
       >

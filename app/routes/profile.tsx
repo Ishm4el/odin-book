@@ -162,12 +162,14 @@ export default function profile({ loaderData }: Route.ComponentProps) {
     ...toDisplay
   } = loaderData;
   const entries = Object.entries(toDisplay);
+  const sectionPadding = "px-10 py-1";
+  const sectionClass = `bg-white ${sectionPadding}`
 
   return (
     <article className="w-full p-5 overflow-y-scroll">
       <section
         id="other-user-header"
-        className="flex w-full items-center gap-2 bg-amber-50 p-2 text-4xl font-semibold"
+        className={`flex w-full items-center gap-2 bg-amber-50 text-4xl font-semibold ${sectionPadding}`}
       >
         <h1>
           {loaderData.firstName} {loaderData.lastName}
@@ -178,7 +180,8 @@ export default function profile({ loaderData }: Route.ComponentProps) {
           className="inline size-[40px] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
         />
       </section>
-      <section id="other-user-info" className="bg-white p-2 text-lg">
+
+      <section id="other-user-info" className={`${sectionClass} text-lg`}>
         {entries.map((entry) => (
           <Descriptor
             title={camelCaseToTitleCase(entry[0])}
@@ -187,10 +190,12 @@ export default function profile({ loaderData }: Route.ComponentProps) {
           />
         ))}
       </section>
-      <section id="user-controls" className="bg-white p-2">
+
+      <section id="user-controls" className={sectionClass}>
         {sameUser ? <ProfileCurrentUser /> : <ProfileOtherUser />}
       </section>
-      <section id="user-posts" className="bg-white p-2 text-lg">
+
+      <section id="user-posts" className={sectionClass}>
         <SectionTitle title="Posts" />
         <ul
           className={`h-fit max-h-[50dvh] border ${posts.length === 0 ? "bg-gray-100" : "bg-sky-200"} overflow-y-scroll`}
@@ -212,7 +217,8 @@ export default function profile({ loaderData }: Route.ComponentProps) {
           {posts.length <= 0 && <span className="p-1">No posts yet!</span>}
         </ul>
       </section>
-      <section id="user-comments" className="bg-white p-2 text-lg">
+
+      <section id="user-comments" className={`${sectionClass} pb-10`}>
         <SectionTitle title="Comments" />
         <ul
           className={`h-fit max-h-[50dvh] border ${comments.length === 0 ? "bg-gray-200" : "bg-sky-50"} overflow-y-scroll`}
