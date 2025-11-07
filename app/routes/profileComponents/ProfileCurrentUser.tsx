@@ -14,7 +14,7 @@ function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
   const [followersInput, setFollowersInput] = useState<string>("");
   return (
     <div className="flex-1">
-       <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <SectionTitle title={title} />
         <SearchForm setInput={setFollowersInput} />
       </div>
@@ -30,13 +30,19 @@ function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
                 else false;
               })
               .map((user) => (
-                <ListItemNavigation onClickLink={`/user/${user.id}`}>
+                <ListItemNavigation
+                  onClickLink={`/user/${user.id}`}
+                  key={`${title}-${user.id}-item-filtered`}
+                >
                   <UserProfilePicture src={user.profilePictureAddress} />
                   <h4>{`${user.firstName} ${user.lastName}`}</h4>
                 </ListItemNavigation>
               ))
           : users.map((user) => (
-              <ListItemNavigation onClickLink={`/user/${user.id}`}>
+              <ListItemNavigation
+                onClickLink={`/user/${user.id}`}
+                key={`${title}-${user.id}-item`}
+              >
                 <UserProfilePicture src={user.profilePictureAddress} />
                 <h4>{`${user.firstName} ${user.lastName}`}</h4>
               </ListItemNavigation>
