@@ -61,7 +61,6 @@ function FollowingFollowers({ followers, userFollows }: FollowersFollowingRow) {
           id: e.follower.id,
           firstName: e.follower.firstName,
           lastName: e.follower.lastName,
-          profilePictureAddress: e.follower.profilePictureAddress,
           created: e.follower.created,
         }))}
       />
@@ -72,7 +71,6 @@ function FollowingFollowers({ followers, userFollows }: FollowersFollowingRow) {
           created: e.followee.created,
           firstName: e.followee.firstName,
           lastName: e.followee.lastName,
-          profilePictureAddress: e.followee.profilePictureAddress,
         }))}
       />
     </div>
