@@ -8,6 +8,9 @@ import invariant from "tiny-invariant";
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
 import { ToastContainer, toast } from "react-toastify";
+import { readFile } from "fs";
+import { LocalFileStorage } from "@remix-run/file-storage/local";
+import { getStorageKey } from "~/services/avatar-storage.server";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -44,28 +47,28 @@ const validateSubmittedForm = async ({
 
   invariant(
     PASSWORD_MINIMUM_LENGTH.test(submittedPassword),
-    "Password must be at least 6 characters long"
+    "Password must be at least 6 characters long",
   );
   invariant(
     PASSWORD_SINGLE_LOWERCASE.test(submittedPassword),
-    "Password must have a lowercase character"
+    "Password must have a lowercase character",
   );
   invariant(
     PASSWORD_SINGLE_UPPERCASE.test(submittedPassword),
-    "Password must have an uppercase character"
+    "Password must have an uppercase character",
   );
   invariant(
     PASSWORD_SINGLE_NUMBER.test(submittedPassword),
-    "Password must contain a single number"
+    "Password must contain a single number",
   );
   invariant(
     PASSWORD_SINGLE_SPECIAL.test(submittedPassword),
-    "Password must contain a special character"
+    "Password must contain a special character",
   );
 
   if (submittedPassword !== submittedRetypedPassword)
     throw new Error(
-      "Submitted password and submitted retyped-password do not match"
+      "Submitted password and submitted retyped-password do not match",
     );
 
   const hashedPassword = await bcrypt.hash(submittedPassword, 10);
@@ -98,8 +101,9 @@ export async function action({ request }: Route.ActionArgs) {
   });
 
   const db = database();
+
   try {
-    return await db
+    const toReturn = await db
       .insert(schema.users)
       .values({
         birthdate: validatedInputs.birthdate,
@@ -109,6 +113,20 @@ export async function action({ request }: Route.ActionArgs) {
         password: validatedInputs.hashedPassword,
       })
       .returning();
+
+    readFile("./server/profileImages/theDefault.jpg", (err, data) => {
+      if (err) throw err;
+      console.log("data has been uploaded");
+      console.log(typeof data);
+
+      const file = new File([data], "dumb.jpg");
+
+      const storage = new LocalFileStorage("./server/profileImages");
+      const storageKey = getStorageKey(toReturn[0].id);
+      storage.set(storageKey, file);
+    });
+
+    return toReturn;
   } catch (error) {
     throw new Error(JSON.stringify(error));
   }
@@ -136,7 +154,7 @@ type ACTIONTYPE =
 
 function passwordRequirementsReducer(
   state: typeof passwordRequirementsReducerInitialState,
-  action: ACTIONTYPE
+  action: ACTIONTYPE,
 ) {
   switch (action.type) {
     case "validateLength":
@@ -184,7 +202,7 @@ function BasicInputField({
     <div className="mb-4">
       <label
         htmlFor={name}
-        className="block text-gray-700 text-sm font-bold mb-2"
+        className="mb-2 block text-sm font-bold text-gray-700"
       >
         {text}
       </label>
@@ -193,7 +211,7 @@ function BasicInputField({
         type={type}
         name={name}
         id={name}
-        className={`shadow appearance-none border border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline invalid:text-red-600 invalid:border-red-500/50 ${additionalClassName}`}
+        className={`focus:shadow-outline mb-3 w-full appearance-none rounded border border-gray-200 px-3 py-2 leading-tight text-gray-700 shadow invalid:border-red-500/50 invalid:text-red-600 focus:outline-none ${additionalClassName}`}
       />
     </div>
   );
@@ -237,7 +255,7 @@ function PasswordRequirements({
 export default function Component({ actionData }: Route.ComponentProps) {
   const [validPasswordState, validPasswordDispatch] = useReducer(
     passwordRequirementsReducer,
-    passwordRequirementsReducerInitialState
+    passwordRequirementsReducerInitialState,
   );
   const navigate = useNavigate();
 
@@ -251,14 +269,14 @@ export default function Component({ actionData }: Route.ComponentProps) {
           onClose: () => {
             navigate("/login");
           },
-        }
+        },
       );
     }
   }, [actionData]);
 
   return (
     <FormSmallCard title="Sign Up">
-      <Form method="post" className="bg-white px-8 pt-6 pb-8 mb-4 ">
+      <Form method="post" className="mb-4 bg-white px-8 pt-6 pb-8">
         <BasicInputField name="firstName" text="First Name" />
         <BasicInputField name="lastName" text="Last Name" />
         <BasicInputField name="birthdate" text="Birthdate" type="date" />
@@ -267,7 +285,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
         <div>
           <label
             htmlFor="password"
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="mb-2 block text-sm font-bold text-gray-700"
           >
             Password
           </label>
@@ -276,7 +294,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="password"
             name="password"
             id="password"
-            className="shadow appearance-none border border-red-500/50 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="focus:shadow-outline mb-3 w-full appearance-none rounded border border-red-500/50 px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
             onChange={(e) => {
               const currentPasswordInput = e.currentTarget.value;
               validPasswordDispatch({
@@ -311,7 +329,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
         />
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
+          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:cursor-pointer hover:bg-blue-700 focus:outline-none"
         >
           Sign Up
         </button>

@@ -1,9 +1,4 @@
-import {
-  data,
-  isRouteErrorResponse,
-  NavLink,
-  useRouteError,
-} from "react-router";
+import { data, isRouteErrorResponse, useRouteError } from "react-router";
 
 import type { Route } from "./+types/profile";
 
@@ -113,7 +108,6 @@ export async function action({ request, params }: Route.ActionArgs) {
           fileUpload.fieldName === "avatar" &&
           fileUpload.type.startsWith("image/")
         ) {
-          console.log("file is uploading");
           const storageKey = getStorageKey(user.id);
           console.log(storageKey);
           await fileStorage.set(storageKey, fileUpload);
@@ -133,7 +127,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       // await storage.set(key, file);
 
       const formData = await parseFormData(request, uploadHandler);
-      // const image = formData.get("avatar");
+      const image = formData.get("avatar");
 
       break;
   }
