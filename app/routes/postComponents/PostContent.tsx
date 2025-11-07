@@ -23,7 +23,7 @@ export default function PostContent() {
               {loaderData.post.authorId.firstName}
             </h2>
             <UserProfilePicture
-              src={loaderData.post.authorId.profilePictureAddress}
+              src={`/profile/${loaderData.post.authorId.id}/avatar`}
               textSize={"xl"}
             />
           </div>
@@ -31,7 +31,10 @@ export default function PostContent() {
         <div id="post-text" className="p-4">
           {loaderData.post.text}
         </div>
-        <div id={`comment-like-button-${loaderData.post.id}`} className="flex justify-center border-b-2 p-2">
+        <div
+          id={`comment-like-button-${loaderData.post.id}`}
+          className="flex justify-center border-b-2 p-2"
+        >
           <div className="size-[var(--base-size-h)] [--base-size-h:calc(var(--text-base--line-height)*var(--text-base))]">
             <LikeSomething
               actionMatch={`/post/like/`}

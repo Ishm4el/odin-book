@@ -28,7 +28,7 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
               {loadedData.user?.firstName} {loadedData.user?.lastName}
             </h2>
             <img
-              src={`http://localhost:3000${loadedData.user?.profilePictureAddress}`}
+              src={`/profile/${loadedData.user?.id}/avatar`}
               alt=""
               className="inline size-[calc(var(--text-xl--line-height)*var(--text-xl))] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
             />

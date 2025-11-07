@@ -151,7 +151,6 @@ function Descriptor({ title, info }: { title: string; info: string }) {
 export default function profile({ loaderData }: Route.ComponentProps) {
   const {
     id,
-    profilePictureAddress,
     followers,
     userFollows,
     created,
@@ -163,10 +162,10 @@ export default function profile({ loaderData }: Route.ComponentProps) {
   } = loaderData;
   const entries = Object.entries(toDisplay);
   const sectionPadding = "px-10 py-1";
-  const sectionClass = `bg-white ${sectionPadding}`
+  const sectionClass = `bg-white ${sectionPadding}`;
 
   return (
-    <article className="w-full p-5 overflow-y-scroll">
+    <article className="w-full overflow-y-scroll p-5">
       <section
         id="other-user-header"
         className={`flex w-full items-center gap-2 bg-amber-50 text-4xl font-semibold ${sectionPadding}`}
@@ -175,7 +174,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
           {loaderData.firstName} {loaderData.lastName}
         </h1>
         <img
-          src={loaderData.profilePictureAddress}
+          src={`/profile/${id}/avatar`}
           alt=""
           className="inline size-[40px] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
         />

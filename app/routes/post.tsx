@@ -47,7 +47,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
               id: true,
               firstName: true,
               lastName: true,
-              profilePictureAddress: true,
             },
           },
           comments: {
@@ -57,7 +56,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
                   id: true,
                   firstName: true,
                   lastName: true,
-                  profilePictureAddress: true,
                 },
               },
             },

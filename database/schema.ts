@@ -20,9 +20,9 @@ export const users = pgTable(
     email: varchar("email", { length: 255 }).notNull().unique(),
     password: varchar("password", { length: 255 }).notNull(),
     created: timestamp("created").defaultNow().notNull(),
-    profilePictureAddress: text("profilePictureAddress")
-      .notNull()
-      .default("/profileImages/theDefault.jpg"),
+    // profilePictureAddress: text("profilePictureAddress")
+    //   .notNull()
+    //   .default("/profileImages/theDefault.jpg"),
     birthdate: date("birthdate").notNull(),
 
     // friends - many users   X

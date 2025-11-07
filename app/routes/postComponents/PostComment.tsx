@@ -61,7 +61,7 @@ export default function PostComment() {
                     {comment.authorId.firstName} {comment.authorId.lastName}
                   </h2>
                   <img
-                    src={comment.authorId.profilePictureAddress}
+                    src={`/profile/${comment.authorId}/avatar`}
                     alt=""
                     className="inline size-[calc(var(--text-base--line-height)*var(--text-base))] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
                   />

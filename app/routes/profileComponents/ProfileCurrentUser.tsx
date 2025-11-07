@@ -34,7 +34,7 @@ function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
                   onClickLink={`/user/${user.id}`}
                   key={`${title}-${user.id}-item-filtered`}
                 >
-                  <UserProfilePicture src={user.profilePictureAddress} />
+                  <UserProfilePicture src={`/profile/${user.id}/avatar`} />
                   <h4>{`${user.firstName} ${user.lastName}`}</h4>
                 </ListItemNavigation>
               ))
@@ -43,7 +43,7 @@ function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
                 onClickLink={`/user/${user.id}`}
                 key={`${title}-${user.id}-item`}
               >
-                <UserProfilePicture src={user.profilePictureAddress} />
+                <UserProfilePicture src={`/profile/${user.id}/avatar`} />
                 <h4>{`${user.firstName} ${user.lastName}`}</h4>
               </ListItemNavigation>
             ))}
