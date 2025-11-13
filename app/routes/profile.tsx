@@ -159,7 +159,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
   const sectionClass = `bg-white ${sectionPadding}`;
 
   return (
-    <article className="w-full overflow-y-scroll p-5">
+    <article className="w-full overflow-y-scroll">
       <section
         id="other-user-header"
         className={`flex w-full items-center gap-2 bg-amber-50 text-4xl font-semibold ${sectionPadding}`}

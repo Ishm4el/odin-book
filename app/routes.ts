@@ -25,7 +25,7 @@ export default [
         route("isLiked/:commentId", "api/isCommentLiked.tsx"),
         route(":postId", "routes/comments.tsx"),
       ]),
-
+      route("profile/search", "routes/users/index.tsx"),
       route("profile/:profileId", "routes/profile.tsx", [
         route("avatar", "api/avatar.tsx"),
       ]),

@@ -52,7 +52,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
   }, [actionData]);
 
   return (
-    <section className="w-full p-5">
+    <section className="w-full">
       <Form className="bg-amber-50/90" method="post" ref={formRef}>
         <h1 className="p-5 text-center text-5xl">Create a new post</h1>
         <div className="flex flex-col items-center justify-center">

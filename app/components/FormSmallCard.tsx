@@ -6,8 +6,8 @@ export default function FormSmallCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="max-w-xs md:min-w-lg shadow-md rounded overflow-hidden h-min mt-[2.5cqh]">
-      <h2 className="text-2xl text-center text-amber-300 text-shadow-sm bg-sky-700 p-2">
+    <div className="h-min max-w-xs overflow-hidden rounded shadow-md md:min-w-lg">
+      <h2 className="bg-sky-700 p-2 text-center text-2xl text-amber-300 text-shadow-sm">
         {title}
       </h2>
       {children}
