@@ -60,19 +60,19 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
 export function PostCard({ loadedData }: { loadedData: loadedData }) {
   const [shouldExpandImage, setShouldExpandImage] = useState<boolean>(false);
   return (
-    <article className="mb-6 bg-white shadow-xl">
+    <article className="mb-6 shadow-xl">
       <PostHeader loadedData={loadedData} />
-      <div className="flex justify-center p-3">
-        {loadedData.post.hasImage && (
+      {loadedData.post.hasImage && (
+        <div className="bg-gray/10 flex justify-center p-3 bg-sky-100/50">
           <img
             src={`/post/${loadedData.post.id}/image`}
             alt=""
-            className={`object-scale-down hover:cursor-pointer ${shouldExpandImage ? "size-[50dvh]" : "size-[25dvh]"}`}
+            className={`object-scale-down shadow hover:cursor-pointer ${shouldExpandImage ? "size-[50dvh]" : "size-[25dvh]"}`}
             onClick={() => setShouldExpandImage(!shouldExpandImage)}
           />
-        )}
-      </div>
-      <span className="block p-5">{loadedData.post.text}</span>
+        </div>
+      )}
+      <span className="block bg-sky-50/99 p-5">{loadedData.post.text}</span>
     </article>
   );
 }
