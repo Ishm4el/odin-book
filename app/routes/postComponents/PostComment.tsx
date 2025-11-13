@@ -36,7 +36,7 @@ export default function PostComment() {
             <textarea
               name="newComment"
               id="newComment"
-              className="mx-3 ring"
+              className="mx-3 ring p-1"
             ></textarea>
           </div>
           <button
