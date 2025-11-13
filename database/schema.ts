@@ -52,6 +52,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const posts = pgTable("posts", {
   id: uuid().primaryKey().defaultRandom(),
   title: varchar({ length: 100 }).notNull(),
+  hasImage: boolean().default(false).notNull(),
   text: varchar({ length: 255 }).notNull(),
   datePublished: timestamp().defaultNow().notNull(),
   dateUpdated: timestamp().defaultNow().notNull(),

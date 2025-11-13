@@ -1,0 +1,1 @@
+ALTER TABLE "posts" ADD COLUMN "hasImage" boolean DEFAULT false NOT NULL;

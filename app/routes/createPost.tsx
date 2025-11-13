@@ -16,6 +16,7 @@ import { FileUpload, parseFormData } from "@remix-run/form-data-parser";
 
 export async function action({ request }: Route.ActionArgs) {
   const generateId = crypto.randomUUID();
+  console.log(generateId);
 
   async function uploadHandler(fileUpload: FileUpload) {
     if (
@@ -23,12 +24,12 @@ export async function action({ request }: Route.ActionArgs) {
       fileUpload.type.startsWith("image/")
     ) {
       const storageKey = getPostImageStorageKey(generateId);
-      console.log(storageKey);
       await postImageStorage.set(storageKey, fileUpload);
 
       const fileFromStorage = await postImageStorage.get(storageKey);
 
       if (fileFromStorage) console.log(fileFromStorage.name);
+      return fileFromStorage;
     }
   }
 
@@ -36,6 +37,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   const postTitle = formData.get("postTitle");
   const postContent = formData.get("postContent");
+  const postImage = formData.get("post-image");
 
   invariant(postTitle, "Please enter a title");
   invariant(postContent, "Please enter content");
@@ -47,6 +49,9 @@ export async function action({ request }: Route.ActionArgs) {
 
   const user = await authenticate(request);
 
+  console.log("PRINTING POST-IMAGE");
+  console.log(postImage);
+
   const db = database();
   try {
     return await db
@@ -56,6 +61,7 @@ export async function action({ request }: Route.ActionArgs) {
         title: postTitle,
         text: postContent,
         id: generateId,
+        hasImage: postImage ? true : false,
       })
       .returning();
   } catch (error) {

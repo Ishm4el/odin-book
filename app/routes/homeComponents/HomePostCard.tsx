@@ -60,6 +60,15 @@ export function PostCard({ loadedData }: { loadedData: loadedData }) {
   return (
     <article className="mb-6 bg-white shadow-xl">
       <PostHeader loadedData={loadedData} />
+      <div className="flex justify-center p-3">
+        {loadedData.post.hasImage && (
+          <img
+            src={`/post/${loadedData.post.id}/image`}
+            alt=""
+            className="size-[25dvh] object-scale-down"
+          />
+        )}
+      </div>
       <span className="block p-5">{loadedData.post.text}</span>
     </article>
   );

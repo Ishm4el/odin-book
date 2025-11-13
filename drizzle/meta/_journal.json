@@ -134,6 +134,13 @@
       "when": 1762487946377,
       "tag": "0018_neat_joshua_kane",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1763021886856,
+      "tag": "0019_tan_shaman",
+      "breakpoints": true
     }
   ]
 }
