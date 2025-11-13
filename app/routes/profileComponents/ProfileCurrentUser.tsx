@@ -1,4 +1,4 @@
-import { Form, useLoaderData, useNavigate } from "react-router";
+import { Form, useLoaderData } from "react-router";
 import type { loader } from "../profile";
 import { useState } from "react";
 import SearchForm from "~/components/SearchForm";

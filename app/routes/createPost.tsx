@@ -8,9 +8,32 @@ import { database } from "~/database/context";
 import * as schema from "~/database/schema";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
+import {
+  postImageStorage,
+  getPostImageStorageKey,
+} from "~/services/post-storage.server";
+import { FileUpload, parseFormData } from "@remix-run/form-data-parser";
 
 export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
+  const generateId = crypto.randomUUID();
+
+  async function uploadHandler(fileUpload: FileUpload) {
+    if (
+      fileUpload.fieldName === "post-image" &&
+      fileUpload.type.startsWith("image/")
+    ) {
+      const storageKey = getPostImageStorageKey(generateId);
+      console.log(storageKey);
+      await postImageStorage.set(storageKey, fileUpload);
+
+      const fileFromStorage = await postImageStorage.get(storageKey);
+
+      if (fileFromStorage) console.log(fileFromStorage.name);
+    }
+  }
+
+  const formData = await parseFormData(request, uploadHandler);
+
   const postTitle = formData.get("postTitle");
   const postContent = formData.get("postContent");
 
@@ -28,7 +51,12 @@ export async function action({ request }: Route.ActionArgs) {
   try {
     return await db
       .insert(schema.posts)
-      .values({ authorId: user.id, title: postTitle, text: postContent })
+      .values({
+        authorId: user.id,
+        title: postTitle,
+        text: postContent,
+        id: generateId,
+      })
       .returning();
   } catch (error) {
     throw new Error(JSON.stringify(error));
@@ -53,7 +81,12 @@ export default function Component({ actionData }: Route.ComponentProps) {
 
   return (
     <section className="w-full">
-      <Form className="bg-amber-50/90" method="post" ref={formRef}>
+      <Form
+        className="bg-amber-50/90 p-5"
+        method="post"
+        ref={formRef}
+        encType="multipart/form-data"
+      >
         <h1 className="p-5 text-center text-5xl">Create a new post</h1>
         <div className="flex flex-col items-center justify-center">
           <label
@@ -67,6 +100,21 @@ export default function Component({ actionData }: Route.ComponentProps) {
             name="postTitle"
             id="postTitle"
             className={`focus:shadow-outline mb-4 w-9/10 appearance-none rounded border border-gray-200 bg-white px-3 py-2 text-center leading-tight text-gray-700 shadow focus:outline-none`}
+          />
+        </div>
+        <div className="mb-5 flex flex-col items-center justify-center">
+          <label
+            htmlFor="post-image"
+            className="mb-2 block text-sm font-bold text-gray-700"
+          >
+            Post Content:
+          </label>
+          <input
+            type="file"
+            id="post-image"
+            name="post-image"
+            accept="image/*"
+            className="text-sm text-gray-700 file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:cursor-pointer hover:file:bg-violet-100"
           />
         </div>
         <div className="mb-5 flex flex-col items-center justify-center">
