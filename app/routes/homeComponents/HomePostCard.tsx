@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router";
 import { type loader } from "../home";
 import LikeSomething from "~/components/LikeSomething";
+import { useState } from "react";
 
 type loadedData = Required<
   Pick<Awaited<ReturnType<typeof loader>>, "postsToDisplay">
@@ -57,6 +58,7 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
 }
 
 export function PostCard({ loadedData }: { loadedData: loadedData }) {
+  const [shouldExpandImage, setShouldExpandImage] = useState<boolean>(false);
   return (
     <article className="mb-6 bg-white shadow-xl">
       <PostHeader loadedData={loadedData} />
@@ -65,7 +67,8 @@ export function PostCard({ loadedData }: { loadedData: loadedData }) {
           <img
             src={`/post/${loadedData.post.id}/image`}
             alt=""
-            className="size-[25dvh] object-scale-down"
+            className={`object-scale-down hover:cursor-pointer ${shouldExpandImage ? "size-[50dvh]" : "size-[25dvh]"}`}
+            onClick={() => setShouldExpandImage(!shouldExpandImage)}
           />
         )}
       </div>
