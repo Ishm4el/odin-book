@@ -40,7 +40,7 @@ export default function DefaultLayout({ loaderData }: Route.ComponentProps) {
       ) : (
         <NavBar />
       )}
-      <main className="h-[calc(100vh-2.5rem)] w-full items-center bg-[url(/booksBackgroundImage.jpg)] bg-cover bg-center bg-no-repeat p-5 md:flex md:h-screen md:flex-col">
+      <main className="h-[calc(100vh-2.5rem)] w-full items-center bg-[url(/booksBackgroundImage.jpg)] bg-cover bg-center bg-no-repeat p-5 md:flex md:h-screen md:flex-col overflow-y-scroll">
         <Outlet />
       </main>
       <ToastContainer />

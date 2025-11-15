@@ -112,7 +112,7 @@ export default function Home({ actionData, loaderData }: Route.ComponentProps) {
   return (
     <>
       {loaderData.user && loaderData.postsToDisplay && (
-        <section className="w-full overflow-y-scroll">
+        <section className="w-full">
           {loaderData.postsToDisplay &&
             loaderData.postsToDisplay.map((post) => (
               <PostCard loadedData={post} key={post.post.id} />

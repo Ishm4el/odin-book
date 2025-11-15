@@ -10,9 +10,9 @@ type loadedData = Required<
 function PostHeader({ loadedData }: { loadedData: loadedData }) {
   const navigate = useNavigate();
   return (
-    <div className="flex">
+    <div className="flex bg-amber-100">
       <div className="flex flex-20 flex-col bg-amber-50 p-2">
-        <div className="flex flex-wrap items-end gap-5">
+        <div className="flex flex-col flex-wrap">
           <NavLink
             to={`/post/${loadedData.post.id}`}
             className="hove r:underline text-3xl text-shadow-amber-500 hover:text-amber-900"
@@ -36,7 +36,7 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
           </div>
         </div>
         <h3 className="text-sm">
-          {`${loadedData.post.datePublished.toString()}`}{" "}
+          {`${loadedData.post.datePublished.toLocaleString()}`}{" "}
           {loadedData.post.datePublished.toString() !==
           loadedData.post.dateUpdated.toString()
             ? loadedData.post.dateUpdated.toString()
@@ -45,7 +45,7 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
       </div>
       <div
         id={`comment-like-button-${loadedData.post.id}`}
-        className="flex-1 items-center self-center justify-self-center bg-amber-100"
+        className="flex-3 items-center self-center justify-self-center md:flex-1"
       >
         <LikeSomething
           actionMatch="/post/like/"
@@ -57,21 +57,28 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
   );
 }
 
-export function PostCard({ loadedData }: { loadedData: loadedData }) {
+function PostCardImage({ postId }: { postId: string }) {
   const [shouldExpandImage, setShouldExpandImage] = useState<boolean>(false);
+  return (
+    <div className="bg-gray/10 flex justify-center bg-sky-100/50 p-3">
+      <img
+        src={`/post/${postId}/image`}
+        alt=""
+        className={`object-scale-down shadow hover:cursor-pointer ${shouldExpandImage ? "size-[50dvh]" : "size-[25dvh]"}`}
+        onClick={() => setShouldExpandImage(!shouldExpandImage)}
+      />
+    </div>
+  );
+}
+
+export function PostCard({ loadedData }: { loadedData: loadedData }) {
+  const postCardImage = loadedData.post.hasImage ? (
+    <PostCardImage postId={loadedData.post.id} />
+  ) : null;
   return (
     <article className="mb-6 shadow-xl">
       <PostHeader loadedData={loadedData} />
-      {loadedData.post.hasImage && (
-        <div className="bg-gray/10 flex justify-center p-3 bg-sky-100/50">
-          <img
-            src={`/post/${loadedData.post.id}/image`}
-            alt=""
-            className={`object-scale-down shadow hover:cursor-pointer ${shouldExpandImage ? "size-[50dvh]" : "size-[25dvh]"}`}
-            onClick={() => setShouldExpandImage(!shouldExpandImage)}
-          />
-        </div>
-      )}
+      {postCardImage}
       <span className="block bg-sky-50/99 p-5">{loadedData.post.text}</span>
     </article>
   );

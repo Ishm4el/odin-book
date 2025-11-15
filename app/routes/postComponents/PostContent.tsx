@@ -12,9 +12,9 @@ export default function PostContent() {
   if (loaderData && loaderData.post)
     return (
       <section id="post-content">
-        <div id="post-header" className="bg-amber-100/99">
-          <h1 className="p-2 text-4xl">{loaderData.post.title}</h1>
-          <div id="post-header-author-section" className="flex gap-2 p-2">
+        <div id="post-header" className="flex flex-col bg-amber-100/99 p-2 gap-1">
+          <h1 className="text-4xl">{loaderData.post.title}</h1>
+          <div id="post-header-author-section" className="flex gap-2">
             <h2
               className="w-fit text-xl hover:cursor-pointer hover:text-amber-900 active:text-amber-500"
               onClick={() => {
@@ -29,6 +29,7 @@ export default function PostContent() {
               textSize={"xl"}
             />
           </div>
+          <h3>{loaderData.post.datePublished.toLocaleString()}</h3>
         </div>
         {loaderData.post.hasImage && (
           <div className="bg-gray/10 flex justify-center bg-sky-100/50 p-3">
@@ -40,12 +41,12 @@ export default function PostContent() {
             />
           </div>
         )}
-        <div id="post-text" className="p-4 bg-white">
+        <div id="post-text" className="bg-white p-4">
           {loaderData.post.text}
         </div>
         <div
           id={`comment-like-button-${loaderData.post.id}`}
-          className="flex justify-center border-b-2 p-2 bg-amber-100"
+          className="flex justify-center border-b-2 bg-amber-100 p-2"
         >
           <div className="size-[var(--base-size-h)] [--base-size-h:calc(var(--text-base--line-height)*var(--text-base))]">
             <LikeSomething
