@@ -10,12 +10,12 @@ type loadedData = Required<
 function PostHeader({ loadedData }: { loadedData: loadedData }) {
   const navigate = useNavigate();
   return (
-    <div className="flex bg-amber-100">
-      <div className="flex flex-20 flex-col bg-amber-50 p-2">
+    <div className="flex bg-amber-100 dark:bg-amber-900">
+      <div className="flex flex-20 flex-col bg-amber-50 p-2 dark:bg-amber-950">
         <div className="flex flex-col flex-wrap">
           <NavLink
             to={`/post/${loadedData.post.id}`}
-            className="hove r:underline text-3xl text-shadow-amber-500 hover:text-amber-900"
+            className="hove r:underline text-3xl text-shadow-amber-500 hover:text-amber-900 dark:hover:text-amber-100"
           >
             {loadedData.post.title}
           </NavLink>
@@ -25,7 +25,7 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
               navigate(`/profile/${loadedData.post.authorId}`);
             }}
           >
-            <h2 className="w-fit text-xl hover:cursor-pointer hover:text-amber-900 active:text-amber-500">
+            <h2 className="w-fit text-xl hover:cursor-pointer hover:text-amber-900 active:text-amber-500 dark:hover:text-amber-100">
               {loadedData.user?.firstName} {loadedData.user?.lastName}
             </h2>
             <img
@@ -60,7 +60,7 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
 function PostCardImage({ postId }: { postId: string }) {
   const [shouldExpandImage, setShouldExpandImage] = useState<boolean>(false);
   return (
-    <div className="bg-gray/10 flex justify-center bg-sky-100/50 p-3">
+    <div className="bg-gray/10 flex justify-center bg-sky-100/50 p-3 dark:bg-sky-950/50">
       <img
         src={`/post/${postId}/image`}
         alt=""
@@ -76,10 +76,10 @@ export function PostCard({ loadedData }: { loadedData: loadedData }) {
     <PostCardImage postId={loadedData.post.id} />
   ) : null;
   return (
-    <article className="mb-6 shadow-xl">
+    <article className="mb-6 shadow-xl last:mb-0">
       <PostHeader loadedData={loadedData} />
       {postCardImage}
-      <span className="block bg-sky-50/99 p-5">{loadedData.post.text}</span>
+      <span className="block bg-sky-50/99 dark:bg-sky-950/99 p-5">{loadedData.post.text}</span>
     </article>
   );
 }

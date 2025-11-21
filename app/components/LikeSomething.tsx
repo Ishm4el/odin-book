@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useFetcher } from "react-router";
 import { type loader as isPostLikedLoader } from "~/api/isPostLiked";
-import {type loader as isCommentLikedLoader} from "~/api/isCommentLiked"
+import { type loader as isCommentLikedLoader } from "~/api/isCommentLiked";
 
 interface LikeSomething {
   requestId: string;
@@ -18,7 +18,9 @@ export default function LikeSomething({
 }: LikeSomething) {
   const fetcher = useFetcher();
 
-  const fetcherLoader = useFetcher<typeof isPostLikedLoader | typeof isCommentLikedLoader>();
+  const fetcherLoader = useFetcher<
+    typeof isPostLikedLoader | typeof isCommentLikedLoader
+  >();
 
   useEffect(() => {
     fetcherLoader.load(loaderMatch + requestId);
@@ -28,7 +30,7 @@ export default function LikeSomething({
     <fetcher.Form
       method="post"
       action={`${actionMatch}${requestId}`}
-      className="size-[var(--base-size-h)]"
+      className="size-[var(--base-size-h)] flex"
     >
       <button
         type="submit"
@@ -43,11 +45,11 @@ export default function LikeSomething({
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className={
+            className={`stroke-gray-500 ${
               fetcherLoader.data?.like
                 ? "fill-amber-500 hover:fill-amber-100"
                 : "hover:fill-amber-400"
-            }
+            }`}
           >
             <path
               strokeLinecap="round"
@@ -57,7 +59,7 @@ export default function LikeSomething({
           </svg>
         ) : (
           <div className="flex items-center justify-center">
-            <div className="size-[var(--base-size-h)] animate-spin rounded-full border-t-2 border-b-2 border-blue-500"></div>
+            <div className="size-[var(--base-size-h)] animate-spin rounded-full border-t-2 border-b-2"></div>
           </div>
         )}
       </button>
