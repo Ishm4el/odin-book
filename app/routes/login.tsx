@@ -13,7 +13,7 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await sessionStorage.getSession(
-    request.headers.get("cookie")
+    request.headers.get("cookie"),
   );
   const user = session.get("user");
 
@@ -27,7 +27,7 @@ export async function action({ request }: Route.ActionArgs) {
     const user = await authenticator.authenticate("user-pass", request);
 
     const session = await sessionStorage.getSession(
-      request.headers.get("cookie")
+      request.headers.get("cookie"),
     );
 
     session.set("user", user);
@@ -50,11 +50,14 @@ export default function Component({ actionData }: Route.ComponentProps) {
       {actionData?.error ? (
         <div className="error">{actionData.error}</div>
       ) : null}
-      <Form method="post" className="bg-white rounded px-8 pt-6 pb-8 mb-4">
+      <Form
+        method="post"
+        className="mb-4 rounded bg-white px-8 pt-6 pb-8 dark:bg-gray-700"
+      >
         <div className="mb-4">
           <label
             htmlFor="email"
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300"
           >
             Email
           </label>
@@ -62,7 +65,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="email"
             name="email"
             id="email"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline focus:border-sky-500 invalid:border-pink-500 invalid:text-pink-600 "
+            className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow invalid:border-pink-500 invalid:text-pink-600 focus:border-sky-500 focus:outline-none dark:text-gray-200 dark:invalid:text-red-400"
             required
           />
         </div>
@@ -70,7 +73,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300"
           >
             Password
           </label>
@@ -79,13 +82,13 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="password"
             name="password"
             id="password"
-            className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:border-sky-500 focus:outline-none dark:text-gray-300"
           />
         </div>
 
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:cursor-pointer"
+          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:cursor-pointer hover:bg-blue-700 focus:outline-none dark:text-gray-100"
         >
           Sign In
         </button>
