@@ -65,7 +65,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="email"
             name="email"
             id="email"
-            className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow invalid:border-pink-500 invalid:text-pink-600 focus:border-sky-500 focus:outline-none dark:text-gray-200 dark:invalid:text-red-400"
+            className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow invalid:border-pink-500 invalid:text-pink-600 focus:border-sky-500 focus:outline-none dark:bg-gray-600 dark:text-gray-200 dark:invalid:text-red-500"
             required
           />
         </div>
@@ -82,7 +82,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="password"
             name="password"
             id="password"
-            className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:border-sky-500 focus:outline-none dark:text-gray-300"
+            className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:border-sky-500 focus:outline-none dark:bg-gray-600 dark:text-gray-300"
           />
         </div>
 

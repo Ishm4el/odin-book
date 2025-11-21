@@ -202,7 +202,7 @@ function BasicInputField({
     <div className="mb-4">
       <label
         htmlFor={name}
-        className="mb-2 block text-sm font-bold text-gray-700"
+        className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200"
       >
         {text}
       </label>
@@ -211,7 +211,7 @@ function BasicInputField({
         type={type}
         name={name}
         id={name}
-        className={`focus:shadow-outline mb-3 w-full appearance-none rounded border border-gray-200 px-3 py-2 leading-tight text-gray-700 shadow invalid:border-red-500/50 invalid:text-red-600 focus:outline-none ${additionalClassName}`}
+        className={`focus:shadow-outline mb-3 w-full appearance-none rounded border border-gray-200 px-3 py-2 leading-tight text-gray-700 shadow invalid:border-red-500/50 invalid:text-red-600 focus:outline-none ${additionalClassName} dark:bg-gray-600 dark:text-gray-200 dark:invalid:border-red-500 dark:invalid:text-red-500`}
       />
     </div>
   );
@@ -276,7 +276,10 @@ export default function Component({ actionData }: Route.ComponentProps) {
 
   return (
     <FormSmallCard title="Sign Up">
-      <Form method="post" className="mb-4 bg-white px-8 pt-6 pb-8">
+      <Form
+        method="post"
+        className="mb-4 bg-white px-8 pt-6 pb-8 dark:bg-gray-700"
+      >
         <BasicInputField name="firstName" text="First Name" />
         <BasicInputField name="lastName" text="Last Name" />
         <BasicInputField name="birthdate" text="Birthdate" type="date" />
@@ -285,7 +288,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
         <div>
           <label
             htmlFor="password"
-            className="mb-2 block text-sm font-bold text-gray-700"
+            className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200"
           >
             Password
           </label>
@@ -294,7 +297,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="password"
             name="password"
             id="password"
-            className="focus:shadow-outline mb-3 w-full appearance-none rounded border border-red-500/50 px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+            className="focus:shadow-outline mb-3 w-full appearance-none rounded border border-red-500/50 px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none dark:border-red-500 dark:bg-gray-600 dark:text-gray-200"
             onChange={(e) => {
               const currentPasswordInput = e.currentTarget.value;
               validPasswordDispatch({
