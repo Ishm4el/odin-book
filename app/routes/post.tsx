@@ -101,7 +101,7 @@ export function HydrateFallback() {
 export default function post({ loaderData, actionData }: Route.ComponentProps) {
   if (loaderData.post)
     return (
-      <article className="flex h-full w-full flex-col justify-between overflow-y-scroll bg-amber-50/20">
+      <article className="flex h-full w-full flex-col justify-between">
         <PostContent />
         <PostComment />
       </article>

@@ -23,7 +23,7 @@ export default function PostComment() {
 
   if (loaderData && loaderData.post) {
     return (
-      <section id="post-comments" className="bg-white">
+      <section id="post-comments" className="bg-white dark:bg-black">
         <Form
           method="post"
           className="mb-3 flex flex-col gap-3 p-1 shadow"
@@ -36,12 +36,12 @@ export default function PostComment() {
             <textarea
               name="newComment"
               id="newComment"
-              className="mx-3 ring p-1"
+              className="mx-3 p-1 ring dark:ring-gray-400"
             ></textarea>
           </div>
           <button
             type="submit"
-            className="mb-1 w-1/2 self-center rounded border bg-orange-50 hover:cursor-pointer hover:bg-orange-100 focus:bg-orange-100"
+            className="mb-1 w-1/2 self-center rounded border bg-orange-50 hover:cursor-pointer hover:bg-orange-100 focus:bg-orange-100 dark:border-gray-400 dark:bg-orange-950 dark:hover:bg-orange-900 dark:focus:bg-orange-900"
           >
             Post Comment
           </button>
@@ -50,18 +50,18 @@ export default function PostComment() {
         <ul id="post-comment-section">
           {loaderData.post.comments.map((comment) => (
             <li className="mb-1 p-1 shadow" key={comment.id}>
-              <div className="flex gap-2 bg-amber-50/90">
+              <div className="flex gap-2 bg-amber-50/90 dark:bg-amber-950/90">
                 <div
                   className="flex gap-1"
                   onClick={() => {
                     navigate(`/profile/${comment.authorId.id}`);
                   }}
                 >
-                  <h2 className="w-fit hover:cursor-pointer hover:text-amber-900 active:text-amber-500">
+                  <h2 className="w-fit hover:cursor-pointer hover:text-amber-900 active:text-amber-500 dark:hover:text-amber-100 dark:active:text-amber-500">
                     {comment.authorId.firstName} {comment.authorId.lastName}
                   </h2>
                   <img
-                    src={`/profile/${comment.authorId}/avatar`}
+                    src={`/profile/${comment.authorId.id}/avatar`}
                     alt=""
                     className="inline size-[calc(var(--text-base--line-height)*var(--text-base))] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500"
                   />

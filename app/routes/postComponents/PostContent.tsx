@@ -12,11 +12,14 @@ export default function PostContent() {
   if (loaderData && loaderData.post)
     return (
       <section id="post-content">
-        <div id="post-header" className="flex flex-col bg-amber-100/99 p-2 gap-1">
+        <div
+          id="post-header"
+          className="flex flex-col gap-1 bg-amber-100/99 p-2 dark:bg-amber-900/99"
+        >
           <h1 className="text-4xl">{loaderData.post.title}</h1>
           <div id="post-header-author-section" className="flex gap-2">
             <h2
-              className="w-fit text-xl hover:cursor-pointer hover:text-amber-900 active:text-amber-500"
+              className="w-fit text-xl hover:cursor-pointer hover:text-amber-900 active:text-amber-500 dark:hover:text-amber-100"
               onClick={() => {
                 navigate(`/profile/${loaderData.post?.authorId.id}`);
               }}
@@ -32,7 +35,7 @@ export default function PostContent() {
           <h3>{loaderData.post.datePublished.toLocaleString()}</h3>
         </div>
         {loaderData.post.hasImage && (
-          <div className="bg-gray/10 flex justify-center bg-sky-100/50 p-3">
+          <div className="bg-gray/10 flex justify-center bg-sky-100/50 p-3 dark:bg-sky-900/50">
             <img
               src={`/post/${loaderData.post.id}/image`}
               alt=""
@@ -41,12 +44,12 @@ export default function PostContent() {
             />
           </div>
         )}
-        <div id="post-text" className="bg-white p-4">
+        <div id="post-text" className="bg-white p-4 dark:bg-gray-950">
           {loaderData.post.text}
         </div>
         <div
           id={`comment-like-button-${loaderData.post.id}`}
-          className="flex justify-center border-b-2 bg-amber-100 p-2"
+          className="flex justify-center border-b-2 bg-amber-100 p-2 dark:border-gray-500 dark:bg-amber-900"
         >
           <div className="size-[var(--base-size-h)] [--base-size-h:calc(var(--text-base--line-height)*var(--text-base))]">
             <LikeSomething
