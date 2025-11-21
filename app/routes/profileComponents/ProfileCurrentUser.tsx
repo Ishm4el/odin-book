@@ -19,7 +19,7 @@ function UserCard({ users, title }: { users: UserInfo[]; title: string }) {
         <SearchForm setInput={setFollowersInput} />
       </div>
       <ul
-        className={`h-[50dvh] overflow-y-scroll border ${users.length === 0 ? "bg-gray-100" : "bg-sky-50"}`}
+        className={`h-[50dvh] overflow-y-scroll border ${users.length === 0 ? "bg-gray-100 dark:bg-gray-800/20" : "bg-sky-50 dark:bg-sky-950"}`}
       >
         {followersInput !== ""
           ? users
@@ -81,7 +81,7 @@ export default function ProfileCurrentUser() {
   const { followers, userFollows } = useLoaderData<typeof loader>();
   return (
     <>
-      <Form method="PATCH" encType="multipart/form-data">
+      <Form method="PATCH" encType="multipart/form-data" className="my-3">
         <input
           type="file"
           id="avatar"

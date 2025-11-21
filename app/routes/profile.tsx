@@ -136,7 +136,9 @@ export async function action({ request, params }: Route.ActionArgs) {
 function Descriptor({ title, info }: { title: string; info: string }) {
   return (
     <div className="flex gap-2">
-      <h2 className="font-medium text-orange-950">{title}: </h2>
+      <h2 className="font-medium text-orange-950 dark:text-orange-100">
+        {title}:{" "}
+      </h2>
       <span>{info}</span>
     </div>
   );
@@ -156,13 +158,13 @@ export default function profile({ loaderData }: Route.ComponentProps) {
   } = loaderData;
   const entries = Object.entries(toDisplay);
   const sectionPadding = "px-10 py-1";
-  const sectionClass = `bg-white ${sectionPadding}`;
+  const sectionClass = `bg-white dark:bg-gray-700 ${sectionPadding}`;
 
   return (
     <article className="w-full">
       <section
         id="other-user-header"
-        className={`flex w-full items-center gap-2 bg-amber-50 text-4xl font-semibold ${sectionPadding}`}
+        className={`flex w-full items-center gap-2 bg-amber-50 text-4xl font-semibold dark:bg-amber-950 ${sectionPadding}`}
       >
         <h1>
           {loaderData.firstName} {loaderData.lastName}
@@ -191,7 +193,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
       <section id="user-posts" className={sectionClass}>
         <SectionTitle title="Posts" />
         <ul
-          className={`h-fit max-h-[50dvh] border ${posts.length === 0 ? "bg-gray-100" : "bg-sky-200"} overflow-y-scroll`}
+          className={`h-fit max-h-[50dvh] border ${posts.length === 0 ? "bg-gray-100 dark:bg-gray-900" : "bg-sky-200 dark:bg-sky-800"} overflow-y-scroll`}
         >
           {posts.map((post) => (
             <ListItemNavigation
@@ -214,7 +216,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
       <section id="user-comments" className={`${sectionClass} pb-10`}>
         <SectionTitle title="Comments" />
         <ul
-          className={`h-fit max-h-[50dvh] border ${comments.length === 0 ? "bg-gray-200" : "bg-sky-50"} overflow-y-scroll`}
+          className={`h-fit max-h-[50dvh] border ${comments.length === 0 ? "bg-gray-200 dark:bg-gray-800" : "bg-sky-50 dark:bg-sky-950"} overflow-y-scroll`}
         >
           {comments.map((comment) => (
             <ListItemNavigation
@@ -241,7 +243,7 @@ export function ErrorBoundary() {
   const error = useRouteError();
 
   const containerClass: React.ComponentProps<"div">["className"] =
-    "bg-white w-full h-full flex flex-col justify-center items-center";
+    "bg-white dark:bg-black w-full h-full flex flex-col justify-center items-center";
 
   if (isRouteErrorResponse(error)) {
     return (
