@@ -10,7 +10,9 @@ export default function NavigationLink({
   return (
     <NavLink
       to={to}
-      className={"font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 active:text-sky-500 transition-colors hover:underline text-lg"}
+      className={
+        "text-lg font-medium text-orange-600 transition-colors hover:text-orange-700 hover:underline active:text-red-500 dark:text-orange-500 dark:hover:text-orange-400 dark:active:text-orange-600"
+      }
     >
       {title}
     </NavLink>

@@ -18,7 +18,7 @@ export default function NavBar({
   return (
     <nav
       className={
-        "flex h-10 w-full bg-sky-50 bg-linear-to-b from-sky-50 to-amber-50 md:h-dvh md:w-fit md:flex-col md:px-2 " +
+        "flex h-10 w-full bg-linear-to-b from-sky-50 to-amber-50 md:h-dvh md:w-fit md:flex-col md:px-2 md:pt-5 dark:from-sky-950 dark:to-amber-950 " +
         className
       }
     >
