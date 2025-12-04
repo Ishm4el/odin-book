@@ -193,7 +193,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
       <section id="user-posts" className={sectionClass}>
         <SectionTitle title="Posts" />
         <ul
-          className={`h-fit max-h-[50dvh] border ${posts.length === 0 ? "bg-gray-100 dark:bg-gray-900" : "bg-sky-200 dark:bg-sky-800"} overflow-y-scroll`}
+          className={`h-fit max-h-[50dvh] border shadow ${posts.length === 0 ? "bg-gray-100 dark:bg-gray-900" : "bg-sky-200 dark:bg-sky-800"} overflow-y-scroll`}
         >
           {posts.map((post) => (
             <ListItemNavigation
