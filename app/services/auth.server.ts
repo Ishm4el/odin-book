@@ -11,7 +11,6 @@ export type User = {
   email: string;
   firstName: string;
   lastName: string;
-  profilePictureAddress: string;
 };
 
 export const sessionStorage = createCookieSessionStorage({
@@ -36,7 +35,6 @@ async function login(email: string, password: string): Promise<User> {
       firstName: true,
       lastName: true,
       password: true,
-      profilePictureAddress: true,
     },
     where: eq(users.email, email),
   });
@@ -51,7 +49,6 @@ async function login(email: string, password: string): Promise<User> {
         firstName: user.firstName,
         id: user.id,
         lastName: user.lastName,
-        profilePictureAddress: user.profilePictureAddress,
       };
   } else throw new Error("User is empty");
 }
@@ -67,5 +64,5 @@ authenticator.use(
 
     return await login(email, password);
   }),
-  "user-pass"
+  "user-pass",
 );
