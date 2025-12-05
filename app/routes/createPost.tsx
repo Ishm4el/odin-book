@@ -88,7 +88,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
   return (
     <section className="w-full">
       <Form
-        className="bg-amber-50/90 p-5"
+        className="bg-amber-50/90 p-5 dark:bg-amber-950/90"
         method="post"
         ref={formRef}
         encType="multipart/form-data"
@@ -97,7 +97,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
         <div className="flex flex-col items-center justify-center">
           <label
             htmlFor="postTitle"
-            className="mb-2 block text-sm font-bold text-gray-700"
+            className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300"
           >
             Post Title:
           </label>
@@ -105,41 +105,41 @@ export default function Component({ actionData }: Route.ComponentProps) {
             type="text"
             name="postTitle"
             id="postTitle"
-            className={`focus:shadow-outline mb-4 w-9/10 appearance-none rounded border border-gray-200 bg-white px-3 py-2 text-center leading-tight text-gray-700 shadow focus:outline-none`}
+            className={`focus:shadow-outline mb-4 w-9/10 appearance-none rounded border border-gray-200 bg-white px-3 py-2 text-center leading-tight text-gray-800 shadow focus:outline-none dark:border-gray-800 dark:bg-black dark:text-gray-200`}
           />
         </div>
         <div className="mb-5 flex flex-col items-center justify-center">
           <label
             htmlFor="post-image"
-            className="mb-2 block text-sm font-bold text-gray-700"
+            className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300"
           >
-            Post Content:
+            Attach Image?
           </label>
           <input
             type="file"
             id="post-image"
             name="post-image"
             accept="image/*"
-            className="text-sm text-gray-700 file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:cursor-pointer hover:file:bg-violet-100"
+            className="text-sm text-gray-700 file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:cursor-pointer hover:file:bg-violet-200 dark:text-gray-500 dark:file:bg-violet-950 dark:file:text-violet-300 dark:hover:file:bg-violet-800"
           />
         </div>
         <div className="mb-5 flex flex-col items-center justify-center">
           <label
             htmlFor="postContent"
-            className="mb-2 block text-sm font-bold text-gray-700"
+            className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300"
           >
             Post Content:
           </label>
           <textarea
             name="postContent"
             id="postContet"
-            className="not-first h-[60vh] w-9/10 rounded-md border border-gray-300 bg-white px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="not-first h-[60vh] w-9/10 rounded-md border border-gray-300 bg-white px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-300 dark:bg-black dark:focus:ring-blue-500"
           />
         </div>
         <div className="mb-6 flex flex-col items-center justify-center">
           <button
             type="submit"
-            className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white transition-colors hover:cursor-pointer hover:bg-blue-700 focus:bg-blue-700 focus:outline-none"
+            className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white transition-colors hover:cursor-pointer hover:bg-blue-700 focus:bg-blue-700 focus:outline-none dark:bg-blue-600 dark:text-gray-100 dark:hover:bg-blue-800 dark:focus:bg-blue-800"
           >
             Post
           </button>
