@@ -1,27 +1,45 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useFetcher, useNavigate } from "react-router";
 import NavigationLink from "./NavigationLink";
+import type { loader } from "app/api/isAuthenticated";
+import { useEffect, useState } from "react";
 
-export default function NavBar({
-  navigationList = [
+type NavigationElement = { title: string; to: string };
+
+const navigationListSets: Record<
+  "unauthenticated" | "authenticated",
+  NavigationElement[]
+> = {
+  unauthenticated: [
     { title: "Home", to: "/" },
     { title: "Login", to: "/login" },
     { title: "Sign Up", to: "/signUp" },
   ],
-  user,
-  className,
-}: {
-  navigationList?: { title: string; to: string }[];
-  user?: { name: string; userId: string };
-  className?: string;
-}) {
+  authenticated: [
+    { title: "Home", to: "/" },
+    { title: "Post", to: "/post/create" },
+    { title: "Users", to: "/profile/search" },
+    { title: "Logout", to: "/logout" },
+  ],
+};
+
+export default function NavBar() {
   const navigate = useNavigate();
+  const fetcher = useFetcher<typeof loader>();
+  const [navigationList, setNavigationList] = useState<
+    (typeof navigationListSets)[keyof typeof navigationListSets]
+  >(navigationListSets.unauthenticated);
+
+  useEffect(() => {
+    if (!fetcher.data && fetcher.state === "idle")
+      fetcher.load("/isAuthenticated");
+    else
+      fetcher.data && fetcher.data.user
+        ? setNavigationList(navigationListSets.authenticated)
+        : setNavigationList(navigationListSets.unauthenticated);
+  }, [fetcher]);
+
   return (
-    <nav
-      className={
-        "flex h-10 w-full bg-linear-to-b from-sky-50 to-amber-50 md:h-dvh md:w-fit md:flex-col md:px-2 md:pt-5 dark:from-sky-950 dark:to-amber-950 " +
-        className
-      }
-    >
+    <nav className="flex h-10 w-full bg-linear-to-b from-sky-50 to-amber-50 md:h-dvh md:w-fit md:flex-col md:px-2 md:pt-5 dark:from-sky-950 dark:to-amber-950">
       <div className="flex w-1/3 items-center justify-center md:w-full">
         <NavLink
           to={"/"}
@@ -41,23 +59,25 @@ export default function NavBar({
             />
           </li>
         ))}
-        {user ? (
+        {fetcher.data && fetcher.data.user && (
           <li
             className="flex items-center gap-1 self-center justify-self-center text-lg font-medium"
             onClick={() => {
-              navigate(`/profile/${user.userId}`);
+              if (fetcher.data && fetcher.data.user) {
+                navigate(`/profile/${fetcher.data.user.id}`);
+              }
             }}
           >
             <span className="text-shadow text-orange-300 hover:cursor-pointer hover:text-orange-400 active:text-amber-600">
-              {user.name}
+              {fetcher.data.user.firstName + " " + fetcher.data.user.lastName}
             </span>
             <img
-              src={`/profile/${user.userId}/avatar`}
+              src={`/profile/${fetcher.data.user.id}/avatar`}
               alt="User Avatar"
               className="inline size-[calc(var(--text-xl--line-height)*var(--text-xl))] rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500 active:border-amber-600"
             />
           </li>
-        ) : null}
+        )}
       </menu>
     </nav>
   );

@@ -9,6 +9,7 @@ import {
 export default [
   layout("./layouts/DefaultLayout.tsx", [
     index("routes/home.tsx"),
+    route("isAuthenticated", "api/isAuthenticated.tsx"),
     route("login", "routes/login.tsx"),
     route("signUp", "routes/signUp.tsx"),
     route("logout", "routes/logout.tsx"),
