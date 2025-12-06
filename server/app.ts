@@ -26,7 +26,11 @@ app.use(
 
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
 
-const client = postgres(process.env.DATABASE_URL);
+const client = postgres(process.env.DATABASE_URL, {
+  max: 1,
+  idle_timeout: 20,
+  max_lifetime: 60 * 30,
+});
 const db = drizzle(client, { schema });
 app.use((_, __, next) => DatabaseContext.run(db, next));
 
