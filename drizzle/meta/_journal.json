@@ -141,6 +141,27 @@
       "when": 1763021886856,
       "tag": "0019_tan_shaman",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1764981689719,
+      "tag": "0020_swift_roland_deschain",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1764984062386,
+      "tag": "0021_rapid_khan",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1764984103414,
+      "tag": "0022_vengeful_inertia",
+      "breakpoints": true
     }
   ]
 }
