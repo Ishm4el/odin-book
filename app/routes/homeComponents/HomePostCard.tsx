@@ -79,7 +79,9 @@ export function PostCard({ loadedData }: { loadedData: loadedData }) {
     <article className="mb-6 shadow-xl last:mb-0">
       <PostHeader loadedData={loadedData} />
       {postCardImage}
-      <span className="block bg-sky-50/99 dark:bg-sky-950/99 p-5">{loadedData.post.text}</span>
+      <div className="bg-sky-50/99 p-5 dark:bg-sky-950/99">
+        <p className="line-clamp-3">{loadedData.post.text}</p>
+      </div>
     </article>
   );
 }
