@@ -119,7 +119,7 @@ export default function NavBar() {
   }, [fetcher]);
 
   return (
-    <nav className="relative flex h-10 w-full justify-between bg-linear-to-l from-sky-50 to-amber-50 px-2 md:h-dvh md:w-fit md:flex-col md:justify-start md:bg-linear-to-b md:px-2 md:pt-5 dark:from-sky-950 dark:to-amber-950">
+    <nav className="relative flex h-10 w-full justify-between bg-linear-to-l from-sky-50 to-amber-50 px-2 text-nowrap break-keep md:h-dvh md:w-fit md:flex-col md:items-center md:justify-start md:bg-linear-to-b md:px-4 md:pt-5 dark:from-sky-950 dark:to-amber-950">
       <HamburgerButton
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -132,14 +132,14 @@ export default function NavBar() {
         <NavLink
           to={"/"}
           className={
-            "text-center text-nowrap text-amber-300 transition-colors text-shadow-md hover:text-amber-400"
+            "text-center text-2xl text-nowrap text-amber-300 transition-colors text-shadow-md hover:text-amber-400"
           }
         >
           ODIN BOOK
         </NavLink>
       </div>
       <menu
-        className={`${isOpen ? "absolute inset-y-10 left-0 flex h-fit w-fit flex-col items-start bg-linear-to-t p-5 dark:from-red-950 dark:to-blue-950" : "hidden"} w-2/3 gap-3 md:flex md:w-full md:flex-col md:items-start md:justify-start`}
+        className={`${isOpen ? "absolute inset-y-10 left-0 flex h-fit w-fit flex-col items-start bg-linear-to-t p-5 dark:from-red-950 dark:to-blue-950" : "hidden"} w-2/3 gap-3 md:flex md:w-full md:flex-col md:items-start md:justify-start md:py-5`}
         ref={ref}
       >
         {navigationList.map((navigationElement) => (
