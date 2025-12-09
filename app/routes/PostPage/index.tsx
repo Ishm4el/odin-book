@@ -1,10 +1,10 @@
-import type { Route } from "./+types/post";
+import type { Route } from "./+types/index";
 import { authenticate } from "~/services/authenticate";
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
 import { and, eq, sql } from "drizzle-orm";
-import PostContent from "./postComponents/PostContent";
-import PostComment from "./postComponents/PostComment";
+import PostContent from "./PostContent";
+import PostComment from "./PostComment";
 
 export function meta({ params }: Route.MetaArgs) {
   return [
@@ -98,7 +98,7 @@ export function HydrateFallback() {
   return <p>Loading Post!</p>;
 }
 
-export default function post({ loaderData, actionData }: Route.ComponentProps) {
+export default function PostPage({ loaderData }: Route.ComponentProps) {
   if (loaderData.post)
     return (
       <article className="flex h-full w-full flex-col justify-between">

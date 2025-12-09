@@ -18,7 +18,7 @@ export default [
         route("like/:postId", "api/likePost.tsx"),
         route("isLiked/:postId", "api/isPostLiked.tsx"),
         route("create", "routes/createPost.tsx"),
-        route(":postId", "routes/post.tsx", [
+        route(":postId", "routes/PostPage/index.tsx", [
           route("image", "api/postImage.tsx"),
         ]),
       ]),

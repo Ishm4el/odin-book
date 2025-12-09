@@ -11,7 +11,7 @@ export default function UserProfilePicture({
     <img
       src={src}
       alt=""
-      className={`inline aspect-square rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500 ${className}`}
+      className={`aspect-square rounded-full border border-amber-300 object-cover hover:cursor-pointer hover:border-amber-500 ${className}`}
     />
   );
 }

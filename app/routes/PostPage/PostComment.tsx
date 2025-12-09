@@ -1,5 +1,5 @@
 import { Form, useActionData, useLoaderData, useNavigate } from "react-router";
-import type { loader, action } from "../post";
+import type { loader, action } from "./index";
 import UserProfilePicture from "~/components/UserProfilePicture";
 import LikeSomething from "~/components/LikeSomething";
 import { useEffect, useRef } from "react";

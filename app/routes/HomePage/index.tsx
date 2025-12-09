@@ -100,7 +100,10 @@ export async function action({ request }: Route.ActionArgs) {
   }
 }
 
-export default function Home({ actionData, loaderData }: Route.ComponentProps) {
+export default function HomePage({
+  actionData,
+  loaderData,
+}: Route.ComponentProps) {
   useEffect(() => {
     if (actionData) {
       toast.success("Your comment has been posted!", {

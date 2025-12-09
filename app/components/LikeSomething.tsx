@@ -30,7 +30,7 @@ export default function LikeSomething({
     <fetcher.Form
       method="post"
       action={`${actionMatch}${requestId}`}
-      className="size-[var(--base-size-h)] flex"
+      className="flex size-[var(--base-size-h)]"
     >
       <button
         type="submit"
@@ -45,10 +45,10 @@ export default function LikeSomething({
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className={`stroke-gray-500 ${
+            className={`stroke-gray-500 dark:stroke-gray-300 ${
               fetcherLoader.data?.like
-                ? "fill-amber-500 hover:fill-amber-100"
-                : "hover:fill-amber-400"
+                ? "fill-amber-500 hover:fill-amber-100 active:fill-amber-50"
+                : "hover:fill-amber-400 active:fill-amber-500"
             }`}
           >
             <path
