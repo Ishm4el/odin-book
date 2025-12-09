@@ -28,7 +28,7 @@ export async function action({ request }: Route.ActionArgs) {
 export default function Component({ actionData }: Route.ComponentProps) {
   const navigate = useNavigate();
   return (
-    <section className="w-[50%] bg-amber-50 dark:bg-amber-950">
+    <section className="w-full bg-amber-50 dark:bg-amber-950">
       <search role="search">
         <Form method="post" className="flex flex-col items-center gap-3 p-5">
           <label
