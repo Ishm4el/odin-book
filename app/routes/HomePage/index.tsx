@@ -1,21 +1,21 @@
 import { database } from "~/database/context";
 import * as schema from "~/database/schema";
 
-import type { Route } from "./+types/home";
+import type { Route } from "./+types/index";
 
 import { sessionStorage } from "~/services/auth.server";
 import { authenticate } from "~/services/authenticate";
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { and, asc, eq, exists, getTableColumns, sql } from "drizzle-orm";
-import UnauthorizedUserHomePage from "./homeComponents/UnauthorizedUserHomePage";
-import { PostCard } from "./homeComponents/HomePostCard";
+import UnauthorizedUserHomePage from "./UnauthorizedUserHomePage";
+import { PostCard } from "./HomePostCard";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
-  ];  
+  ];
 }
 
 export async function loader({ context, request }: Route.LoaderArgs) {

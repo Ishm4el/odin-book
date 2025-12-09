@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router";
-import { type loader } from "../home";
+import { type loader } from ".";
 import LikeSomething from "~/components/LikeSomething";
 import { useState } from "react";
 
