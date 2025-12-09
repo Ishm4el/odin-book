@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher, useNavigate } from "react-router";
 
 export default function UnauthorizedUserHomePage(props: { message: string }) {
   const password = `Secret-${crypto.randomUUID()!}`;
+  const navigate = useNavigate();
   const [triggerGuest, setTriggerGuest] = useState<boolean>(false);
 
   const [guestUser, setGuestUser] = useState({
@@ -26,10 +27,17 @@ export default function UnauthorizedUserHomePage(props: { message: string }) {
         .submit({ ...guestUser }, { action: "/signUp", method: "post" })
         .then(() => {
           console.log("Guest user Generated");
-          randomLoginFetcher.submit({
-            email: guestUser.email,
-            password: guestUser.password,
-          }, {method: "post", action: "/login"}).then();
+          randomLoginFetcher
+            .submit(
+              {
+                email: guestUser.email,
+                password: guestUser.password,
+              },
+              { method: "post", action: "/login" },
+            )
+            .then(() => {
+              navigate("/");
+            });
         });
     }
   }, [triggerGuest]);
