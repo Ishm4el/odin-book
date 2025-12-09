@@ -53,11 +53,11 @@ export default function Component({ actionData }: Route.ComponentProps) {
         </Form>
       </search>
       {actionData && actionData.length !== 0 ? (
-        <ul className="flex flex-col gap-2 border-10 border-amber-50 bg-amber-100 p-5 dark:border-amber-950 dark:bg-amber-900">
+        <ul className="flex flex-col gap-2 border-10 border-amber-50 bg-amber-100 dark:border-amber-950 dark:bg-amber-900">
           {actionData.map((e) => (
             <li
               key={e.id}
-              className="flex items-center gap-1 p-5 text-xl hover:cursor-pointer hover:bg-sky-50 focus:bg-sky-50 active:bg-sky-200 dark:hover:bg-sky-950 dark:focus:bg-sky-950 dark:active:bg-sky-800"
+              className="box-content flex h-8 items-stretch justify-start gap-1 p-5 text-xl hover:cursor-pointer hover:bg-sky-50 focus:bg-sky-50 active:bg-sky-200 dark:hover:bg-sky-950 dark:focus:bg-sky-950 dark:active:bg-sky-800"
               tabIndex={0}
               onClick={() => navigate(`/profile/${e.id}`)}
               onKeyDown={(event) => {
@@ -65,11 +65,10 @@ export default function Component({ actionData }: Route.ComponentProps) {
                   navigate(`/profile/${e.id}`);
               }}
             >
-              <UserProfilePicture
-                src={`/profile/${e.id}/avatar`}
-                textSize="xl"
-              />
-              <span>{e.name}</span>
+              <UserProfilePicture src={`/profile/${e.id}/avatar`} />
+              <span className="h-min max-h-min min-h-min text-2xl break-keep whitespace-nowrap">
+                {e.name}
+              </span>
             </li>
           ))}
         </ul>
