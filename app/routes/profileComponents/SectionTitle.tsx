@@ -6,7 +6,7 @@ export default function SectionTitle({
   className?: string;
 }) {
   return (
-    <h3 className={`text-2xl text-rose-900 dark:text-rose-200 ${className}`}>
+    <h3 className={`text-2xl text-rose-900 dark:text-rose-200 mb-2 ${className}`}>
       {title}
     </h3>
   );

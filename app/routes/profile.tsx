@@ -157,13 +157,12 @@ export default function profile({ loaderData }: Route.ComponentProps) {
     ...toDisplay
   } = loaderData;
   const entries = Object.entries(toDisplay);
-  const sectionPadding = "px-10 py-1";
+  const sectionPadding = "px-10 py-5";
   const sectionClass = `bg-white dark:bg-gray-700 ${sectionPadding}`;
 
   return (
     <article className="w-full">
       <section
-        id="other-user-header"
         className={`flex w-full items-center gap-2 bg-amber-50 text-4xl font-semibold dark:bg-amber-950 ${sectionPadding}`}
       >
         <h1>
@@ -177,6 +176,7 @@ export default function profile({ loaderData }: Route.ComponentProps) {
       </section>
 
       <section id="other-user-info" className={`${sectionClass} text-lg`}>
+        <SectionTitle title="Information" />
         {entries.map((entry) => (
           <Descriptor
             title={camelCaseToTitleCase(entry[0])}
