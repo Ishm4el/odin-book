@@ -11,7 +11,7 @@ function PostHeader({ loadedData }: { loadedData: loadedData }) {
   const navigate = useNavigate();
   return (
     <div className="flex bg-amber-100 dark:bg-amber-900">
-      <div className="flex flex-20 flex-col bg-amber-50 p-2 dark:bg-amber-950">
+      <div className="flex flex-20 flex-col bg-amber-50 p-4 dark:bg-amber-950">
         <div className="flex flex-col flex-wrap">
           <NavLink
             to={`/post/${loadedData.post.id}`}

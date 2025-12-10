@@ -86,9 +86,9 @@ export default function Component({ actionData }: Route.ComponentProps) {
   }, [actionData]);
 
   return (
-    <section className="w-full">
+    <section className="flex h-full max-h-full w-full flex-col overflow-hidden">
       <Form
-        className="bg-amber-50/90 p-5 dark:bg-amber-950/90"
+        className="flex h-full flex-col bg-amber-50/90 p-5 dark:bg-amber-950/90"
         method="post"
         ref={formRef}
         encType="multipart/form-data"
@@ -123,7 +123,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
             className="text-sm text-gray-700 file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:cursor-pointer hover:file:bg-violet-200 dark:text-gray-500 dark:file:bg-violet-950 dark:file:text-violet-300 dark:hover:file:bg-violet-800"
           />
         </div>
-        <div className="mb-5 flex flex-col items-center justify-center">
+        <div className="mb-5 flex flex-1 basis-full flex-col items-center justify-stretch">
           <label
             htmlFor="postContent"
             className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300"
@@ -133,7 +133,7 @@ export default function Component({ actionData }: Route.ComponentProps) {
           <textarea
             name="postContent"
             id="postContet"
-            className="not-first h-[60vh] w-9/10 rounded-md border border-gray-300 bg-white px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-300 dark:bg-black dark:focus:ring-blue-500"
+            className="not-first w-9/10 flex-1 basis-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-300 dark:bg-black dark:focus:ring-blue-500"
           />
         </div>
         <div className="mb-6 flex flex-col items-center justify-center">
