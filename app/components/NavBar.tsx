@@ -5,30 +5,34 @@ import { useEffect, useState } from "react";
 import useClickOutside from "./useClickOutside";
 
 // icons
-import homeIcon from "/home.svg";
-import loginIcon from "/log-in.svg";
-import logoutIcon from "/log-out.svg";
-import postIcon from "/message-square.svg";
-import userPlusIcon from "/user-plus.svg";
-import usersIcon from "/users.svg";
+import HomeIcon from "~/assets/icons/home.svg?react";
+import LoginIcon from "~/assets/icons/log-in.svg?react";
+import LogoutIcon from "~/assets/icons/log-out.svg?react";
+import PostIcon from "~/assets/icons/message-square.svg?react";
+import UserPlusIcon from "~/assets/icons/user-plus.svg?react";
+import UsersIcon from "~/assets/icons/users.svg?react";
 import HamburgerButton from "./HamburgerButton";
 
-export type NavigationElement = { title: string; to: string; icon: string };
+export type NavigationElement = {
+  title: string;
+  to: string;
+  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+};
 
 const navigationListSets: Record<
   "unauthenticated" | "authenticated",
   NavigationElement[]
 > = {
   unauthenticated: [
-    { title: "Home", to: "/", icon: homeIcon },
-    { title: "Login", to: "/login", icon: loginIcon },
-    { title: "Sign Up", to: "/signUp", icon: userPlusIcon },
+    { title: "Home", to: "/", Icon: HomeIcon },
+    { title: "Login", to: "/login", Icon: LoginIcon },
+    { title: "Sign Up", to: "/signUp", Icon: UserPlusIcon },
   ],
   authenticated: [
-    { title: "Home", to: "/", icon: homeIcon },
-    { title: "Post", to: "/post/create", icon: postIcon },
-    { title: "Users", to: "/profile/search", icon: usersIcon },
-    { title: "Logout", to: "/logout", icon: logoutIcon },
+    { title: "Home", to: "/", Icon: HomeIcon },
+    { title: "Post", to: "/post/create", Icon: PostIcon },
+    { title: "Users", to: "/profile/search", Icon: UsersIcon },
+    { title: "Logout", to: "/logout", Icon: LogoutIcon },
   ],
 };
 
@@ -51,7 +55,7 @@ export default function NavBar() {
   }, [fetcher]);
 
   return (
-    <nav className="relative flex h-10 w-full justify-between bg-linear-to-l from-sky-50 to-amber-50 px-2 text-nowrap break-keep md:h-dvh md:w-fit md:flex-col md:items-center md:justify-start md:bg-linear-to-b md:px-4 md:pt-5 dark:from-sky-950 dark:to-amber-950">
+    <nav className="relative flex h-10 w-full justify-between bg-linear-to-l from-sky-500/10 to-amber-500 px-2 text-nowrap break-keep md:h-dvh md:w-fit md:flex-col md:items-center md:justify-start md:bg-linear-to-b md:px-4 md:pt-5 dark:from-sky-950 dark:to-amber-950">
       <HamburgerButton
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -77,7 +81,7 @@ export default function NavBar() {
             <NavigationLink
               title={navigationElement.title}
               to={navigationElement.to}
-              icon={navigationElement.icon}
+              Icon={navigationElement.Icon}
             />
           </li>
         ))}
@@ -86,7 +90,7 @@ export default function NavBar() {
       {fetcher.data && fetcher.data.user && (
         <div className="flex items-center justify-center gap-2 md:max-h-[calc(var(--text-xl--line-height)*var(--text-xl))] md:max-w-min md:items-stretch md:px-5">
           <NavLink
-            className="text-shadow hidden max-w-min text-orange-300 hover:cursor-pointer hover:text-orange-400 active:text-amber-600 md:flex md:flex-1 md:text-xl"
+            className="hidden max-w-min text-white transition-colors text-shadow-md text-shadow-zinc-950 hover:cursor-pointer hover:text-orange-400 active:text-amber-600 md:flex md:flex-1 md:text-xl"
             to={`/profile/${fetcher.data.user.id}`}
           >
             {fetcher.data.user.firstName.length +
